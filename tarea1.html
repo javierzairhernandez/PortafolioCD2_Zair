@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tim Berners-Lee - Quién es, biografía e inventor de la Web</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:    #1a6fa8;
+      --blue-d:  #145989;
+      --green:   #2e7d4f;
+      --gray-l:  #f4f6f8;
+      --gray-m:  #e0e4ea;
+      --gray-t:  #555e6b;
+      --border:  #d1d9e0;
+      --text:    #1c2128;
+      --link:    #1a6fa8;
+      --f-head:  'Lato', sans-serif;
+      --f-body:  'Lato', sans-serif;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      background: #fff;
+      color: var(--text);
+      font-family: var(--f-body);
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    a { color: var(--link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── BACK BUTTON ── */
+    .back-btn-bar {
+      background: var(--blue-d);
+      padding: 12px 0;
+    }
+    .back-btn-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      color: var(--blue-d);
+      font-family: var(--f-head);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: background .2s, color .2s, border-color .2s;
+      letter-spacing: 0.02em;
+    }
+    .back-btn:hover {
+      background: var(--blue-d);
+      color: #fff;
+      border-color: #fff;
+      text-decoration: none;
+    }
+    .back-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    /* ── LAYOUT ── */
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 3rem;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2.5rem;
+      align-items: start;
+    }
+
+    /* ── MAIN CONTENT ── */
+    main {}
+
+    .article-title {
+      font-family: var(--f-head);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+      margin-top: 1.2rem;
+    }
+
+    .article-sub {
+      font-size: 1.05rem;
+      color: var(--gray-t);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    /* Featured image */
+    .feat-img {
+      width: 100%;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+    }
+    .feat-img img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .feat-caption {
+      font-size: 0.78rem;
+      color: #888;
+      padding: 5px 0 1.2rem;
+      font-style: italic;
+    }
+
+    /* Index box */
+    .index-box {
+      background: var(--gray-l);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem 1.25rem 1.25rem;
+      margin: 1.5rem 0 2rem;
+      display: inline-block;
+      min-width: 240px;
+    }
+    .index-box-title {
+      font-weight: 700;
+      font-size: 0.88rem;
+      margin-bottom: 0.6rem;
+      color: var(--text);
+    }
+    .index-box ol {
+      padding-left: 1.3rem;
+    }
+    .index-box li {
+      font-size: 0.83rem;
+      line-height: 1.7;
+    }
+    .index-box a { color: var(--link); }
+
+    /* Section headings */
+    .section-h2 {
+      font-family: var(--f-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--blue);
+      padding: 8px 16px;
+      border-radius: 3px;
+      margin: 2.2rem 0 1rem;
+      line-height: 1.3;
+    }
+
+    .section-h3 {
+      font-family: var(--f-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--blue);
+      margin: 1.6rem 0 0.5rem;
+      padding-bottom: 4px;
+      border-bottom: 2px solid var(--blue);
+      display: inline-block;
+    }
+
+    /* Body text */
+    p {
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+      color: var(--text);
+    }
+    p strong { font-weight: 700; }
+    p em { font-style: italic; }
+
+    /* Inline img float */
+    .float-img {
+      float: right;
+      margin: 0 0 1.2rem 1.8rem;
+      max-width: 340px;
+      width: 42%;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .float-img img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      height: 220px;
+    }
+    .float-img figcaption {
+      font-size: 0.75rem;
+      color: #888;
+      padding: 6px 8px;
+      background: var(--gray-l);
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .clearfix::after { content: ''; display: table; clear: both; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: #e8f4fd;
+      border-left: 4px solid var(--blue);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .highlight-box p { margin: 0; font-size: 0.93rem; }
+
+    /* Green highlight */
+    .highlight-green {
+      background: #eaf6ee;
+      border-left: 4px solid var(--green);
+      padding: 1rem 1.25rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .highlight-green p { margin: 0; font-size: 0.93rem; }
+
+    /* List */
+    .content-list {
+      padding-left: 1.4rem;
+      margin: 0.5rem 0 1.2rem;
+    }
+    .content-list li {
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      line-height: 1.7;
+    }
+
+    /* See also */
+    .see-also {
+      background: var(--gray-l);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      margin: 1.5rem 0;
+    }
+    .see-also strong { color: var(--text); }
+    .see-also a { color: var(--link); margin-left: 4px; }
+
+    /* ── SIDEBAR ── */
+    aside {
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .sidebar-card {
+      background: var(--gray-l);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-card-title {
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      letter-spacing: 0.02em;
+    }
+
+    .sidebar-photo {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    .infobox {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .infobox tr { border-bottom: 1px solid var(--border); }
+    .infobox tr:last-child { border-bottom: none; }
+    .infobox td {
+      padding: 7px 12px;
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .infobox td:first-child {
+      font-weight: 700;
+      color: var(--gray-t);
+      width: 42%;
+      background: #f9fafb;
+    }
+
+    .sidebar-links { padding: 0.5rem 0; }
+    .sidebar-links a {
+      display: block;
+      padding: 7px 14px;
+      font-size: 0.83rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--link);
+    }
+    .sidebar-links a:hover { background: #e8f4fd; text-decoration: none; }
+    .sidebar-links a::before { content: '▶ '; font-size: 0.65rem; color: var(--blue); }
+
+    /* ── TAGS ── */
+    .tags {
+      margin: 2.5rem 0 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      background: var(--gray-l);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--gray-t);
+    }
+    .tag:hover { background: #e8f4fd; color: var(--blue); cursor: pointer; }
+
+    /* ── FOOTER ── (eliminado) */
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 800px) {
+      .layout { grid-template-columns: 1fr; }
+      aside { position: static; }
+      .float-img { float: none; width: 100%; max-width: 100%; margin: 0 0 1rem; }
+      .nav-item { padding: 10px 10px; font-size: 0.75rem; }
+      .footer-top { grid-template-columns: 1fr; }
+      .header-inner { height: auto; padding: 12px 1rem; flex-wrap: wrap; }
+      .search-bar { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- BOTÓN VOLVER -->
+<div class="back-btn-bar">
+  <div class="back-btn-inner">
+    <a href="index.html" class="back-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      Volver al portafolio
+    </a>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- CONTENT -->
+  <main>
+
+    <h1 class="article-title">Tim Berners-Lee</h1>
+    <p class="article-sub">
+      Te explicamos quién es Tim Berners-Lee, su biografía, sus principales aportes y por qué se le considera el padre de la World Wide Web.
+    </p>
+
+    <!-- Featured image -->
+    <div class="feat-img">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sir-Tim-Berners-Lee.jpg/1200px-Sir-Tim-Berners-Lee.jpg"
+        alt="Tim Berners-Lee, inventor de la World Wide Web"
+        onerror="this.style.background='#ccc';this.style.height='320px';"
+      />
+    </div>
+    <p class="feat-caption">Tim Berners-Lee, inventor de la World Wide Web. Su invención transformó para siempre la manera en que la humanidad comparte información.</p>
+
+    <!-- INDEX -->
+    <div class="index-box">
+      <div class="index-box-title">Índice de contenidos</div>
+      <ol>
+        <li><a href="#quien">¿Quién es Tim Berners-Lee?</a></li>
+        <li><a href="#biografia">Biografía</a></li>
+        <li><a href="#www">Invención de la World Wide Web</a></li>
+        <li><a href="#aportes">Principales aportes</a></li>
+        <li><a href="#w3c">El W3C y los estándares abiertos</a></li>
+        <li><a href="#legado">Legado e impacto</a></li>
+        <li><a href="#premios">Premios y reconocimientos</a></li>
+        <li><a href="#frases">Frases célebres</a></li>
+      </ol>
+    </div>
+
+    <!-- 1. QUIÉN ES -->
+    <h2 class="section-h2" id="quien">¿Quién es Tim Berners-Lee?</h2>
+
+    <p>
+      Cuando hablamos de <strong>Tim Berners-Lee</strong>, nos referimos al <strong>científico computacional, físico e inventor británico</strong> que en 1989 diseñó y construyó la <strong>World Wide Web (WWW)</strong>, el sistema de hipertexto global que hoy conocemos como "la Web" y que permite a miles de millones de personas acceder a información, comunicarse y comerciar a través de Internet.
+    </p>
+
+    <p>
+      Berners-Lee no solo inventó la Web, sino que, en uno de los gestos más generosos de la historia de la tecnología, <strong>renunció a patentar su invención</strong>, dejándola libre y abierta para que cualquier persona en el mundo pudiera usarla sin costo alguno. Esto convirtió a la Web en un bien común de la humanidad.
+    </p>
+
+    <div class="highlight-box">
+      <p>
+        <strong>Dato clave:</strong> Tim Berners-Lee nació el <strong>8 de junio de 1955</strong> en Londres, Reino Unido. Es considerado uno de los cien científicos más importantes del siglo XX y ha recibido el premio Turing, el mayor galardón en ciencias de la computación.
+      </p>
+    </div>
+
+    <p>
+      Actualmente dirige el <strong>World Wide Web Consortium (W3C)</strong>, la organización que define los estándares técnicos de la Web, y es un activo defensor de la privacidad digital, la neutralidad de la red y el acceso universal a Internet.
+    </p>
+
+    <div class="see-also">
+      <strong>Ver también:</strong>
+      <a href="#">Historia de Internet</a> ·
+      <a href="#">Protocolo HTTP</a> ·
+      <a href="#">HTML</a> ·
+      <a href="#">Neutralidad de la red</a>
+    </div>
+
+    <!-- 2. BIOGRAFÍA -->
+    <h2 class="section-h2" id="biografia">Biografía</h2>
+
+    <figure class="float-img">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Timothy_John_Berners-Lee_2.jpg/800px-Timothy_John_Berners-Lee_2.jpg"
+        alt="Tim Berners-Lee dando una conferencia"
+        onerror="this.style.display='none'"
+      />
+      <figcaption>Berners-Lee durante una conferencia en el MIT. Ha dedicado décadas a defender la Web como un espacio abierto y libre.</figcaption>
+    </figure>
+
+    <p>
+      <strong>Timothy John Berners-Lee</strong> nació el 8 de junio de 1955 en el barrio londinense de Hammersmith. Sus padres, Conway Berners-Lee y Mary Lee Woods, eran matemáticos que habían trabajado en el desarrollo del <em>Ferranti Mark 1</em>, uno de los primeros computadores comerciales del mundo. Esta influencia familiar marcó profundamente su vocación científica.
+    </p>
+
+    <p>
+      Desde pequeño mostró un vivo interés por la electrónica. Estudió en el <strong>Emanuel School</strong> de Londres y luego ingresó al <strong>Queen's College de la Universidad de Oxford</strong>, donde obtuvo en 1976 una licenciatura con honores en Física. Durante sus años universitarios construyó su primera computadora con un microprocesador comprado de segunda mano y algunos componentes electrónicos básicos.
+    </p>
+
+    <h3 class="section-h3">Los primeros años de carrera</h3>
+
+    <p>
+      Tras graduarse, Berners-Lee trabajó como ingeniero de software en varias empresas del sector tecnológico en el Reino Unido. En 1980 llegó como contratista independiente al <strong>CERN</strong> (Organización Europea para la Investigación Nuclear) en Ginebra, Suiza, la mayor instalación de física de partículas del mundo.
+    </p>
+
+    <p>
+      Durante esa primera estancia en el CERN, diseñó un programa interno llamado <strong>Enquire</strong>, una especie de base de datos de hipertexto que permitía vincular documentos entre sí mediante referencias cruzadas. Aunque nunca fue publicado oficialmente, Enquire sembró la semilla de lo que años después sería la Web.
+    </p>
+
+    <div class="clearfix"></div>
+
+    <!-- 3. WWW -->
+    <h2 class="section-h2" id="www">Invención de la World Wide Web</h2>
+
+    <figure class="float-img">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/First_Web_Server.jpg/800px-First_Web_Server.jpg"
+        alt="El primer servidor web de la historia en el CERN"
+        onerror="this.style.display='none'"
+      />
+      <figcaption>El ordenador NeXT de Tim Berners-Lee en el CERN fue el primer servidor web de la historia. Tiene una etiqueta que dice: "Esta máquina es un servidor. ¡NO LA APAGUES!"</figcaption>
+    </figure>
+
+    <p>
+      Al regresar al CERN en 1984 como investigador, Berners-Lee observó un problema cotidiano pero frustrante: los miles de científicos de diferentes países que trabajaban allí usaban sistemas de cómputo incompatibles entre sí, lo que dificultaba el intercambio de información.
+    </p>
+
+    <p>
+      En <strong>marzo de 1989</strong> presentó a su jefe, Mike Sendall, un documento titulado <em>"Information Management: A Proposal"</em> (Gestión de la información: una propuesta). En ese texto planteaba un sistema distribuido de hipertexto para compartir información a través de la red. Sendall anotó en el margen: <em>"Vague but exciting"</em> (Vago pero emocionante), autorizando así el proyecto.
+    </p>
+
+    <p>
+      Berners-Lee trabajó junto a su colega <strong>Robert Cailliau</strong> para desarrollar los tres pilares fundamentales de la Web:
+    </p>
+
+    <ul class="content-list">
+      <li><strong>HTML (HyperText Markup Language):</strong> el lenguaje para crear y estructurar páginas web.</li>
+      <li><strong>HTTP (HyperText Transfer Protocol):</strong> el protocolo para transferir documentos entre servidores y navegadores.</li>
+      <li><strong>URL (Uniform Resource Locator):</strong> el sistema de direcciones únicas para identificar recursos en la red.</li>
+    </ul>
+
+    <p>
+      El <strong>6 de agosto de 1991</strong>, Berners-Lee publicó el primer sitio web de la historia en la dirección <strong>info.cern.ch</strong>. Era una página sencilla con texto que explicaba qué era la Web y cómo usarla. Ese día marcó el inicio de una nueva era para la humanidad.
+    </p>
+
+    <div class="highlight-green">
+      <p>
+        <strong>Decisión histórica:</strong> En <strong>1993</strong>, el CERN anunció que la tecnología de la World Wide Web quedaría disponible de forma gratuita y sin royalties para todo el mundo. Tim Berners-Lee apoyó esta decisión, renunciando a una fortuna que podría haber sido de miles de millones de dólares. "Si hubiera monetizado la Web, probablemente no habría evolucionado tan rápido", declaró años después.
+      </p>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <!-- 4. APORTES -->
+    <h2 class="section-h2" id="aportes">Principales aportes</h2>
+
+    <p>
+      Más allá de la invención de la Web, <strong>Tim Berners-Lee ha realizado contribuciones fundamentales</strong> en múltiples áreas del desarrollo tecnológico y la gobernanza de Internet:
+    </p>
+
+    <ul class="content-list">
+      <li>Diseño e implementación del <strong>primer navegador web</strong> y editor de páginas, también llamado WorldWideWeb (luego renombrado Nexus).</li>
+      <li>Creación del <strong>primer servidor web</strong> del mundo, usando una computadora NeXT en el CERN.</li>
+      <li>Propuesta y desarrollo de la <strong>Web Semántica</strong>, un proyecto para que las máquinas puedan interpretar el significado de los datos en la Web, no solo su formato.</li>
+      <li>Fundación del proyecto <strong>Solid</strong>, una plataforma descentralizada que busca devolver a los usuarios el control de sus datos personales, desafiando el modelo de negocios de las grandes plataformas digitales.</li>
+      <li>Impulso del <strong>Contrato por la Web</strong> (2019), un documento firmado por gobiernos, empresas y ciudadanos para comprometerse con una Web segura, libre e inclusiva.</li>
+    </ul>
+
+    <!-- 5. W3C -->
+    <h2 class="section-h2" id="w3c">El W3C y los estándares abiertos</h2>
+
+    <p>
+      En <strong>octubre de 1994</strong>, Berners-Lee fundó el <strong>World Wide Web Consortium (W3C)</strong> en el Instituto Tecnológico de Massachusetts (MIT), con el apoyo del CERN y la Unión Europea. El W3C es la organización internacional encargada de desarrollar y mantener los <strong>estándares técnicos abiertos</strong> que garantizan que la Web funcione de forma coherente e interoperable en todo el mundo.
+    </p>
+
+    <p>
+      Entre los estándares impulsados por el W3C bajo su dirección se encuentran <strong>HTML5, CSS, XML, SVG, WebAssembly</strong> y las Pautas de Accesibilidad al Contenido Web (WCAG), que permiten que personas con discapacidad puedan navegar la Web en igualdad de condiciones.
+    </p>
+
+    <div class="highlight-box">
+      <p>
+        <strong>Filosofía central del W3C:</strong> "La Web es para todos." Este principio guía el trabajo del consorcio, que agrupa a más de 400 organizaciones miembro de todo el mundo y trabaja para que la Web sea accesible, segura y universal.
+      </p>
+    </div>
+
+    <!-- 6. LEGADO -->
+    <h2 class="section-h2" id="legado">Legado e impacto</h2>
+
+    <p>
+      El impacto de Tim Berners-Lee en la civilización contemporánea es difícil de exagerar. La World Wide Web <strong>transformó radicalmente la economía, la educación, la comunicación, la política y la cultura</strong> a escala global. Hoy existen más de 1.800 millones de sitios web y más de 5.000 millones de usuarios de Internet en el mundo.
+    </p>
+
+    <p>
+      Su legado, sin embargo, va más allá de los números. Al ceder la Web de forma gratuita, Berners-Lee demostró que <strong>la tecnología puede y debe ser un bien común</strong>, accesible para todos sin distingo de raza, origen o nivel económico. Esta filosofía de apertura influyó directamente en movimientos como el software libre, el código abierto y los bienes comunes digitales.
+    </p>
+
+    <p>
+      En sus últimos años, Berners-Lee ha adoptado una postura crítica frente a las grandes plataformas tecnológicas como Facebook, Google y Amazon, señalando que la <strong>concentración de datos en pocas manos</strong> representa una amenaza para la democracia y la privacidad individual. Considera que la Web actual se ha alejado de su visión original de una red libre, descentralizada y al servicio del ser humano.
+    </p>
+
+    <div class="see-also">
+      <strong>Ver también:</strong>
+      <a href="#">Software libre</a> ·
+      <a href="#">Privacidad digital</a> ·
+      <a href="#">Inteligencia artificial</a> ·
+      <a href="#">Brecha digital</a>
+    </div>
+
+    <!-- 7. PREMIOS -->
+    <h2 class="section-h2" id="premios">Premios y reconocimientos</h2>
+
+    <p>
+      A lo largo de su carrera, <strong>Tim Berners-Lee ha acumulado los reconocimientos más importantes</strong> del mundo científico y tecnológico. Entre ellos destacan:
+    </p>
+
+    <ul class="content-list">
+      <li><strong>Premio Turing (2016)</strong> — otorgado por la ACM, es el mayor galardón en ciencias de la computación, conocido como "el Nobel de la informática".</li>
+      <li><strong>Caballero Comendador de la Orden del Imperio Británico (KBE, 2004)</strong> — distinción otorgada por la Reina Isabel II.</li>
+      <li><strong>Orden del Mérito (OM, 2007)</strong> — una de las distinciones más exclusivas del Reino Unido, reservada a solo 24 personas a la vez.</li>
+      <li><strong>Premio Príncipe de Asturias de Investigación Científica y Técnica (2002)</strong></li>
+      <li><strong>Premio Millennium Technology Prize (2004)</strong> — Finlandia.</li>
+      <li><strong>Miembro de la Royal Society</strong> y de la <strong>Royal Academy of Engineering</strong>.</li>
+      <li><strong>Doctorados honoris causa</strong> por más de veinte universidades de todo el mundo.</li>
+      <li>Fue incluido en la <strong>apertura de los Juegos Olímpicos de Londres 2012</strong> como símbolo del aporte del Reino Unido a la humanidad.</li>
+    </ul>
+
+    <!-- 8. FRASES -->
+    <h2 class="section-h2" id="frases">Frases célebres</h2>
+
+    <p>A continuación, algunas de las <strong>frases más recordadas de Tim Berners-Lee</strong>:</p>
+
+    <div class="highlight-box" style="margin-bottom:0.75rem;">
+      <p>"La Web no es para mí, no es una tecnología — es un espejo de nuestra humanidad."</p>
+    </div>
+    <div class="highlight-box" style="margin-bottom:0.75rem;">
+      <p>"El poder de la Web está en su universalidad. El acceso de todos, sin importar la discapacidad, es un aspecto esencial."</p>
+    </div>
+    <div class="highlight-box" style="margin-bottom:0.75rem;">
+      <p>"Los datos son preciosos y durarán más que los sistemas mismos."</p>
+    </div>
+    <div class="highlight-box">
+      <p>"La Web como yo la imaginé todavía no existe. El futuro sigue siendo mucho más grande que el pasado."</p>
+    </div>
+
+    <!-- TAGS -->
+    <div class="tags">
+      <span class="tag">World Wide Web</span>
+      <span class="tag">Internet</span>
+      <span class="tag">HTML</span>
+      <span class="tag">HTTP</span>
+      <span class="tag">CERN</span>
+      <span class="tag">W3C</span>
+      <span class="tag">Tecnología</span>
+      <span class="tag">Biografía</span>
+      <span class="tag">Ciencias de la computación</span>
+      <span class="tag">Cultura Digital</span>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside>
+
+    <!-- Infobox -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">Tim Berners-Lee</div>
+      <img
+        class="sidebar-photo"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sir-Tim-Berners-Lee.jpg/800px-Sir-Tim-Berners-Lee.jpg"
+        alt="Tim Berners-Lee"
+        onerror="this.style.display='none'"
+      />
+      <table class="infobox">
+        <tr><td>Nombre completo</td><td>Timothy John Berners-Lee</td></tr>
+        <tr><td>Nacimiento</td><td>8 de junio de 1955</td></tr>
+        <tr><td>Lugar</td><td>Londres, Reino Unido</td></tr>
+        <tr><td>Nacionalidad</td><td>Británica</td></tr>
+        <tr><td>Formación</td><td>Universidad de Oxford (Física)</td></tr>
+        <tr><td>Institución</td><td>CERN · MIT · W3C</td></tr>
+        <tr><td>Campo</td><td>Ciencias de la computación</td></tr>
+        <tr><td>Conocido por</td><td>Inventar la World Wide Web</td></tr>
+        <tr><td>Premio Turing</td><td>2016</td></tr>
+      </table>
+    </div>
+
+    <!-- Related topics -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">Temas relacionados</div>
+      <div class="sidebar-links">
+        <a href="#">Historia de Internet</a>
+        <a href="#">Protocolo HTTP</a>
+        <a href="#">Lenguaje HTML</a>
+        <a href="#">Hojas de estilo CSS</a>
+        <a href="#">Web Semántica</a>
+        <a href="#">Privacidad en Internet</a>
+        <a href="#">Neutralidad de la red</a>
+        <a href="#">Open Source (código abierto)</a>
+        <a href="#">Brecha digital</a>
+        <a href="#">Inteligencia artificial</a>
+      </div>
+    </div>
+
+    <!-- Did you know -->
+    <div class="sidebar-card">
+      <div class="sidebar-card-title">¿Sabías que…?</div>
+      <div style="padding: 1rem; font-size: 0.82rem; line-height: 1.7; color: var(--gray-t);">
+        <p style="margin-bottom:.75rem;">El nombre original del navegador que creó Berners-Lee era <strong>WorldWideWeb</strong>. Tuvo que ser renombrado a <strong>Nexus</strong> para evitar confusiones con la Web en sí misma.</p>
+        <p style="margin-bottom:.75rem;">El primer mensaje enviado a través de la Web fue la presentación del propio sistema, publicada en el grupo de noticias <em>alt.hypertext</em> el 6 de agosto de 1991.</p>
+        <p>En los Juegos Olímpicos de Londres 2012, Berners-Lee apareció en la ceremonia de apertura escribiendo en su laptop el mensaje: <strong>"This is for everyone"</strong> (Esto es para todos).</p>
+      </div>
+    </div>
+
+  </aside>
+
+</div><!-- /layout -->
+
+</body>
+</html>

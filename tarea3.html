@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía HTML5 · Tarea 3 · Cultura Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #e8e4df;
+    --border-strong: #d0cbc4;
+    --accent: #c0392b;
+    --accent2: #922b21;
+    --accent-light: #fdf2f1;
+    --dim: #a89b94;
+    --text: #1c1713;
+    --muted: #6b5f58;
+    --font-display: 'Lora', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --code-bg: #1e1a18;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow: 0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.05);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+
+  .back-btn {
+    position: fixed; top: 20px; left: 20px; z-index: 100;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    color: var(--muted); text-decoration: none; padding: 8px 16px;
+    border: 1px solid var(--border); border-radius: 50px;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm); transition: all .2s;
+  }
+  .back-btn:hover { color: var(--accent); border-color: var(--accent); box-shadow: var(--shadow); }
+
+  .hero {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 7rem 2rem 5rem; text-align: center;
+  }
+  .hero-orb { display: none; }
+  .hero-badge {
+    display: inline-block; background: var(--accent-light); color: var(--accent);
+    font-family: var(--font-body); font-size: 12px; font-weight: 500;
+    letter-spacing: .06em; text-transform: uppercase; padding: 5px 16px;
+    border-radius: 50px; border: 1px solid rgba(192,57,43,.15); margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700; line-height: 1.15; color: var(--text); margin-bottom: 1.25rem; letter-spacing: -.01em;
+  }
+  .hero-title span { color: var(--accent); font-style: italic; }
+  .hero-sub { font-size: 16px; color: var(--muted); max-width: 500px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+
+  .layout { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 210px 1fr; gap: 0; }
+  .sidebar {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--border); padding: 2.5rem 0;
+    background: var(--surface); scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar { display: none; }
+  .sidebar-label { font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); padding: 0 1.4rem; margin-bottom: 1rem; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 1.4rem; font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--muted); text-decoration: none; transition: color .15s, background .15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--text); background: var(--bg); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); font-weight: 500; }
+  .nav-num { font-size: 11px; color: var(--dim); min-width: 18px; }
+
+  .main { padding: 3.5rem 3rem 6rem; }
+  .section { margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-num { font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+  .section-title { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 1.85rem); font-weight: 700; color: var(--text); margin-bottom: .75rem; line-height: 1.2; }
+  .section-intro { font-size: 15px; color: var(--muted); line-height: 1.75; max-width: 620px; margin-bottom: 2rem; font-weight: 300; }
+
+  .info-card { background: var(--accent-light); border: 1px solid rgba(192,57,43,.12); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .info-card strong { color: var(--text); }
+
+  .tag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .tag-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s; }
+  .tag-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .tag-header { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1.1rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+  .tag-name { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); font-weight: 700; }
+  .tag-type { font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); background: var(--surface); border: 1px solid var(--border); padding: 2px 8px; border-radius: 50px; }
+  .tag-desc { padding: .85rem 1.1rem; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .tag-example { margin: 0 1.1rem .85rem; background: var(--code-bg); border-radius: 7px; padding: .65rem .9rem; font-family: var(--font-mono); font-size: .65rem; color: #c8b8a8; line-height: 1.7; overflow-x: auto; }
+
+  .code-block { background: var(--code-bg); border-radius: 12px; overflow: hidden; margin: 1.75rem 0; box-shadow: var(--shadow-lg); }
+  .code-topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,.06); background: #171310; }
+  .code-dots { display:flex; gap:6px; }
+  .code-dots span { width:10px; height:10px; border-radius:50%; }
+  .code-dots span:nth-child(1){background:#ff5f57;}
+  .code-dots span:nth-child(2){background:#febc2e;}
+  .code-dots span:nth-child(3){background:#28c840;}
+  .code-filename { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; color: #5a504a; }
+  pre { padding: 1.5rem 1.75rem; font-family: var(--font-mono); font-size: .72rem; line-height: 1.85; overflow-x: auto; color: #c8b8a8; }
+  .kw  { color: #e88080; font-weight: 700; }
+  .at  { color: #89b8e0; }
+  .str { color: #a8d8a0; }
+  .cm  { color: #4a3f38; }
+  .tg  { color: #e8c090; }
+  .vl  { color: #d8a8e0; }
+
+  .attr-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 1.5rem; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
+  .attr-table th { text-align: left; padding: .75rem 1.1rem; background: var(--text); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+  .attr-table td { padding: .7rem 1.1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; line-height: 1.6; background: var(--surface); }
+  .attr-table td:first-child { color: var(--accent); font-family: var(--font-mono); font-size: .75rem; white-space: nowrap; }
+  .attr-table tr:last-child td { border-bottom: none; }
+  .attr-table tr:hover td { background: var(--bg); }
+
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: .85rem; margin-top: 1.5rem; }
+  .concept-pill { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; gap: .85rem; align-items: flex-start; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+  .concept-pill:hover { box-shadow: var(--shadow); }
+  .concept-icon { font-size: 1.3rem; line-height: 1; margin-top: 1px; flex-shrink: 0; }
+  .concept-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .concept-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+
+  .tip { border-left: 3px solid var(--accent); padding: .9rem 1.3rem; background: var(--accent-light); border-radius: 0 8px 8px 0; margin: 1.75rem 0; font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .tip strong { color: var(--accent); }
+
+  .structure-box { background: var(--code-bg); border-radius: 12px; padding: 1.75rem; font-family: var(--font-mono); font-size: .72rem; line-height: 2.1; color: #9a8880; margin: 1.75rem 0; box-shadow: var(--shadow-lg); }
+  .s-indent  { padding-left: 1.6rem; }
+  .s-indent2 { padding-left: 3.2rem; }
+  .s-indent3 { padding-left: 4.8rem; }
+  .s-tag     { color: #e8c090; }
+  .s-attr    { color: #89b8e0; }
+  .s-val     { color: #a8d8a0; }
+  .s-cm      { color: #4a3f38; }
+  .s-content { color: #c8b8a8; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--border); z-index: 200; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .1s; border-radius: 0 2px 2px 0; }
+
+  @media(max-width:768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 2rem 1.25rem 4rem; }
+    .hero { padding: 6rem 1.5rem 3.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra de progreso -->
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<!-- Volver -->
+<a class="back-btn" href="index.html">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  Volver al portafolio
+</a>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">Tarea 3 · Unidad 1 · Cultura Digital</div>
+  <h1 class="hero-title">
+    Guía para aprender<br/>
+    <span>HTML5</span>
+  </h1>
+  <p class="hero-sub">Desde cero hasta dominar la estructura, etiquetas, atributos y semántica del lenguaje base de la web.</p>
+</section>
+
+<!-- Layout principal -->
+<div class="layout">
+
+  <!-- Sidebar nav -->
+  <nav class="sidebar">
+    <p class="sidebar-label">Contenido</p>
+    <a class="nav-item active" href="#que-es"><span class="nav-num">01</span>¿Qué es HTML5?</a>
+    <a class="nav-item" href="#estructura"><span class="nav-num">02</span>Estructura base</a>
+    <a class="nav-item" href="#etiquetas-texto"><span class="nav-num">03</span>Etiquetas de texto</a>
+    <a class="nav-item" href="#etiquetas-listas"><span class="nav-num">04</span>Listas</a>
+    <a class="nav-item" href="#etiquetas-enlaces"><span class="nav-num">05</span>Enlaces e imágenes</a>
+    <a class="nav-item" href="#etiquetas-semanticas"><span class="nav-num">06</span>Semántica HTML5</a>
+    <a class="nav-item" href="#formularios"><span class="nav-num">07</span>Formularios</a>
+    <a class="nav-item" href="#multimedia"><span class="nav-num">08</span>Multimedia</a>
+    <a class="nav-item" href="#tablas"><span class="nav-num">09</span>Tablas</a>
+    <a class="nav-item" href="#atributos"><span class="nav-num">10</span>Atributos globales</a>
+    <a class="nav-item" href="#buenas-practicas"><span class="nav-num">11</span>Buenas prácticas</a>
+    <a class="nav-item" href="#ejemplo-completo"><span class="nav-num">12</span>Ejemplo completo</a>
+  </nav>
+
+  <!-- Contenido -->
+  <main class="main">
+
+    <!-- 01 ¿Qué es HTML5? -->
+    <section class="section" id="que-es">
+      <p class="section-num">01 — Introducción</p>
+      <h2 class="section-title">¿Qué es HTML5?</h2>
+      <p class="section-intro">HTML (HyperText Markup Language) es el lenguaje estándar para crear páginas web. La versión 5, lanzada oficialmente en 2014, incorporó soporte nativo para multimedia, nuevas etiquetas semánticas y APIs modernas.</p>
+
+      <div class="concept-grid">
+        <div class="concept-pill">
+          <div class="concept-icon">🌐</div>
+          <div>
+            <div class="concept-name">Lenguaje de marcado</div>
+            <div class="concept-desc">No es un lenguaje de programación. Define la estructura y el significado del contenido mediante etiquetas.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">📄</div>
+          <div>
+            <div class="concept-name">Archivo .html</div>
+            <div class="concept-desc">Los documentos HTML se guardan con extensión .html y son interpretados por los navegadores web.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">🏗️</div>
+          <div>
+            <div class="concept-name">Estructura base</div>
+            <div class="concept-desc">Todo documento HTML tiene una jerarquía obligatoria: DOCTYPE, html, head y body.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">🔖</div>
+          <div>
+            <div class="concept-name">Etiquetas</div>
+            <div class="concept-desc">Las etiquetas son palabras clave entre corchetes angulares que le indican al navegador cómo mostrar el contenido.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">🎨</div>
+          <div>
+            <div class="concept-name">Trabaja con CSS y JS</div>
+            <div class="concept-desc">HTML define la estructura, CSS el estilo visual y JavaScript la interactividad. Los tres forman la tríada del desarrollo web.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">♿</div>
+          <div>
+            <div class="concept-name">Accesibilidad</div>
+            <div class="concept-desc">Un HTML bien escrito es accesible para lectores de pantalla y tecnologías de asistencia.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>Tip:</strong> Para comenzar solo necesitas un editor de texto (como VSCode o Notepad++) y un navegador web. No hace falta instalar nada más.
+      </div>
+    </section>
+
+    <!-- 02 Estructura base -->
+    <section class="section" id="estructura">
+      <p class="section-num">02 — Fundamentos</p>
+      <h2 class="section-title">Estructura base de un documento</h2>
+      <p class="section-intro">Todo documento HTML5 válido debe comenzar con una declaración DOCTYPE y contener las etiquetas raíz obligatorias.</p>
+
+      <div class="structure-box">
+        <div><span class="s-cm">&lt;!-- Declaración del tipo de documento --&gt;</span></div>
+        <div><span class="s-tag">&lt;!DOCTYPE</span> <span class="s-attr">html</span><span class="s-tag">&gt;</span></div>
+        <br/>
+        <div><span class="s-tag">&lt;html</span> <span class="s-attr">lang=</span><span class="s-val">"es"</span><span class="s-tag">&gt;</span></div>
+        <div class="s-indent"><span class="s-cm">&lt;!-- Metadatos: no visibles en pantalla --&gt;</span></div>
+        <div class="s-indent"><span class="s-tag">&lt;head&gt;</span></div>
+        <div class="s-indent2"><span class="s-tag">&lt;meta</span> <span class="s-attr">charset=</span><span class="s-val">"UTF-8"</span><span class="s-tag">/&gt;</span></div>
+        <div class="s-indent2"><span class="s-tag">&lt;meta</span> <span class="s-attr">name=</span><span class="s-val">"viewport"</span> <span class="s-attr">content=</span><span class="s-val">"width=device-width"</span><span class="s-tag">/&gt;</span></div>
+        <div class="s-indent2"><span class="s-tag">&lt;title&gt;</span><span class="s-content">Título de la página</span><span class="s-tag">&lt;/title&gt;</span></div>
+        <div class="s-indent"><span class="s-tag">&lt;/head&gt;</span></div>
+        <br/>
+        <div class="s-indent"><span class="s-cm">&lt;!-- Contenido visible por el usuario --&gt;</span></div>
+        <div class="s-indent"><span class="s-tag">&lt;body&gt;</span></div>
+        <div class="s-indent2"><span class="s-content">Todo el contenido visible va aquí...</span></div>
+        <div class="s-indent"><span class="s-tag">&lt;/body&gt;</span></div>
+        <div><span class="s-tag">&lt;/html&gt;</span></div>
+      </div>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;!DOCTYPE html&gt;</span><span class="tag-type">Declaración</span></div>
+          <div class="tag-desc">Indica al navegador que el documento usa HTML5. Siempre va en la primera línea. No es una etiqueta HTML sino una instrucción.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;html&gt;</span><span class="tag-type">Raíz</span></div>
+          <div class="tag-desc">Elemento raíz que engloba todo el documento. El atributo <code style="color:var(--accent2)">lang</code> define el idioma del contenido.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;head&gt;</span><span class="tag-type">Metadatos</span></div>
+          <div class="tag-desc">Contiene información sobre el documento que no se muestra al usuario: título, codificación, enlaces a CSS, etc.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;body&gt;</span><span class="tag-type">Contenido</span></div>
+          <div class="tag-desc">Todo el contenido visible de la página va dentro de esta etiqueta: textos, imágenes, botones, formularios, etc.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;meta&gt;</span><span class="tag-type">Metadato</span></div>
+          <div class="tag-desc">Define metadatos del documento. <code style="color:var(--accent2)">charset="UTF-8"</code> asegura que los caracteres especiales (acentos, ñ) se muestren correctamente.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;title&gt;</span><span class="tag-type">Metadato</span></div>
+          <div class="tag-desc">Define el título que aparece en la pestaña del navegador y en los resultados de búsqueda (SEO).</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Etiquetas de texto -->
+    <section class="section" id="etiquetas-texto">
+      <p class="section-num">03 — Tipografía</p>
+      <h2 class="section-title">Etiquetas de texto y tipografía</h2>
+      <p class="section-intro">Las etiquetas de texto definen la jerarquía, énfasis y presentación del contenido escrito de la página.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;h1&gt; – &lt;h6&gt;</span><span class="tag-type">Encabezados</span></div>
+          <div class="tag-desc">Seis niveles de encabezado. H1 es el más importante (título principal) y H6 el menor. Solo debe haber un H1 por página.</div>
+          <div class="tag-example">&lt;h1&gt;Título principal&lt;/h1&gt;<br/>&lt;h2&gt;Subtítulo&lt;/h2&gt;<br/>&lt;h3&gt;Sección&lt;/h3&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;p&gt;</span><span class="tag-type">Bloque</span></div>
+          <div class="tag-desc">Define un párrafo de texto. El navegador añade espacio automáticamente antes y después.</div>
+          <div class="tag-example">&lt;p&gt;Este es un párrafo de texto con información relevante.&lt;/p&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;strong&gt;</span><span class="tag-type">Inline</span></div>
+          <div class="tag-desc">Texto de importancia alta, se muestra en <strong>negrita</strong>. Tiene valor semántico (importante para SEO y accesibilidad).</div>
+          <div class="tag-example">&lt;p&gt;Esto es &lt;strong&gt;muy importante&lt;/strong&gt;.&lt;/p&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;em&gt;</span><span class="tag-type">Inline</span></div>
+          <div class="tag-desc">Énfasis en el texto, se muestra en <em>cursiva</em>. Semánticamente indica énfasis, no solo estilo visual.</div>
+          <div class="tag-example">&lt;p&gt;El resultado &lt;em&gt;podría&lt;/em&gt; cambiar.&lt;/p&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;span&gt;</span><span class="tag-type">Inline</span></div>
+          <div class="tag-desc">Contenedor en línea sin valor semántico. Útil para aplicar estilos CSS a partes de un texto.</div>
+          <div class="tag-example">&lt;p&gt;Color &lt;span style="color:red"&gt;rojo&lt;/span&gt;&lt;/p&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;br&gt;</span><span class="tag-type">Inline</span></div>
+          <div class="tag-desc">Inserta un salto de línea. Es una etiqueta vacía (no tiene cierre). Úsala solo cuando el salto sea parte del contenido.</div>
+          <div class="tag-example">&lt;p&gt;Línea uno&lt;br/&gt;Línea dos&lt;/p&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;blockquote&gt;</span><span class="tag-type">Bloque</span></div>
+          <div class="tag-desc">Indica una cita larga de otra fuente. Se muestra con sangría. Usa el atributo <code style="color:var(--accent2)">cite</code> para indicar la fuente.</div>
+          <div class="tag-example">&lt;blockquote cite="url"&gt;<br/>  Texto citado aquí.<br/>&lt;/blockquote&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;code&gt;</span><span class="tag-type">Inline</span></div>
+          <div class="tag-desc">Muestra fragmentos de código con fuente monoespaciada. Para bloques de código largos se combina con &lt;pre&gt;.</div>
+          <div class="tag-example">&lt;p&gt;Usa &lt;code&gt;console.log()&lt;/code&gt;&lt;/p&gt;</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">textos.html</span></div>
+        <pre><span class="tg">&lt;h1&gt;</span><span class="vl">Cultura Digital</span><span class="tg">&lt;/h1&gt;</span>
+<span class="tg">&lt;h2&gt;</span><span class="vl">Módulo 1: Fundamentos</span><span class="tg">&lt;/h2&gt;</span>
+
+<span class="tg">&lt;p&gt;</span>HTML es el <span class="tg">&lt;strong&gt;</span>lenguaje base<span class="tg">&lt;/strong&gt;</span> de la web.
+Fue creado por <span class="tg">&lt;em&gt;</span>Tim Berners-Lee<span class="tg">&lt;/em&gt;</span> en 1991.<span class="tg">&lt;/p&gt;</span>
+
+<span class="tg">&lt;blockquote&gt;</span>
+  La web es para todos. — Tim Berners-Lee
+<span class="tg">&lt;/blockquote&gt;</span>
+
+<span class="tg">&lt;p&gt;</span>Para imprimir en consola usa <span class="tg">&lt;code&gt;</span>console.log()<span class="tg">&lt;/code&gt;</span>.<span class="tg">&lt;/p&gt;</span></pre>
+      </div>
+    </section>
+
+    <!-- 04 Listas -->
+    <section class="section" id="etiquetas-listas">
+      <p class="section-num">04 — Organización</p>
+      <h2 class="section-title">Listas</h2>
+      <p class="section-intro">Las listas son fundamentales para organizar información. HTML tiene tres tipos: listas no ordenadas, ordenadas y de definición.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;ul&gt;</span><span class="tag-type">Lista</span></div>
+          <div class="tag-desc">Lista no ordenada (con viñetas). Úsala cuando el orden de los elementos no importa.</div>
+          <div class="tag-example">&lt;ul&gt;<br/>  &lt;li&gt;HTML&lt;/li&gt;<br/>  &lt;li&gt;CSS&lt;/li&gt;<br/>  &lt;li&gt;JavaScript&lt;/li&gt;<br/>&lt;/ul&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;ol&gt;</span><span class="tag-type">Lista</span></div>
+          <div class="tag-desc">Lista ordenada (numerada). Úsala cuando el orden sí importa, como pasos de un proceso.</div>
+          <div class="tag-example">&lt;ol&gt;<br/>  &lt;li&gt;Abrir editor&lt;/li&gt;<br/>  &lt;li&gt;Escribir código&lt;/li&gt;<br/>  &lt;li&gt;Guardar archivo&lt;/li&gt;<br/>&lt;/ol&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;li&gt;</span><span class="tag-type">Item</span></div>
+          <div class="tag-desc">Define cada elemento de una lista. Siempre debe estar dentro de &lt;ul&gt;, &lt;ol&gt; o &lt;menu&gt;.</div>
+          <div class="tag-example">&lt;li&gt;Elemento de lista&lt;/li&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;dl&gt; &lt;dt&gt; &lt;dd&gt;</span><span class="tag-type">Definición</span></div>
+          <div class="tag-desc">Lista de definición. &lt;dt&gt; es el término y &lt;dd&gt; su definición. Ideal para glosarios.</div>
+          <div class="tag-example">&lt;dl&gt;<br/>  &lt;dt&gt;HTML&lt;/dt&gt;<br/>  &lt;dd&gt;Lenguaje de marcado&lt;/dd&gt;<br/>&lt;/dl&gt;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Enlaces e imágenes -->
+    <section class="section" id="etiquetas-enlaces">
+      <p class="section-num">05 — Navegación y media</p>
+      <h2 class="section-title">Enlaces e imágenes</h2>
+      <p class="section-intro">Los hipervínculos son la esencia de la web. Las imágenes enriquecen visualmente el contenido. Ambos requieren atributos específicos.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;a&gt;</span><span class="tag-type">Enlace</span></div>
+          <div class="tag-desc">Crea un hipervínculo. El atributo <code style="color:var(--accent2)">href</code> define el destino. Con <code style="color:var(--accent2)">target="_blank"</code> abre en nueva pestaña.</div>
+          <div class="tag-example">&lt;a href="https://ejemplo.com"<br/>   target="_blank"&gt;<br/>  Visitar sitio<br/>&lt;/a&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;img&gt;</span><span class="tag-type">Imagen</span></div>
+          <div class="tag-desc">Inserta una imagen. Es una etiqueta vacía (sin cierre). <code style="color:var(--accent2)">src</code> es la ruta y <code style="color:var(--accent2)">alt</code> el texto alternativo (obligatorio).</div>
+          <div class="tag-example">&lt;img src="foto.jpg"<br/>     alt="Descripción"<br/>     width="300"/&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;figure&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Envuelve contenido visual (imágenes, diagramas) junto con su descripción usando &lt;figcaption&gt;.</div>
+          <div class="tag-example">&lt;figure&gt;<br/>  &lt;img src="grafica.png" alt="Gráfica"/&gt;<br/>  &lt;figcaption&gt;Fig. 1&lt;/figcaption&gt;<br/>&lt;/figure&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;link&gt;</span><span class="tag-type">Head</span></div>
+          <div class="tag-desc">Va dentro de &lt;head&gt;. Vincula recursos externos como hojas de estilo CSS o iconos de la página.</div>
+          <div class="tag-example">&lt;link rel="stylesheet"<br/>      href="estilos.css"/&gt;</div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>Importante:</strong> Siempre agrega el atributo <code style="color:var(--accent2)">alt</code> a las imágenes. Es obligatorio para accesibilidad y mejora el SEO de la página.
+      </div>
+    </section>
+
+    <!-- 06 Semántica -->
+    <section class="section" id="etiquetas-semanticas">
+      <p class="section-num">06 — HTML5 Semántico</p>
+      <h2 class="section-title">Etiquetas semánticas de HTML5</h2>
+      <p class="section-intro">HTML5 introdujo etiquetas que describen el significado del contenido, no solo su apariencia. Esto mejora la accesibilidad, el SEO y la legibilidad del código.</p>
+
+      <div class="info-card">
+        <strong>¿Qué es la semántica?</strong><br/>
+        Antes de HTML5 se usaban <code>&lt;div&gt;</code> para todo. Las etiquetas semánticas reemplazan esos divs genéricos con etiquetas que describen qué tipo de contenido contienen, lo que ayuda a los navegadores, lectores de pantalla y motores de búsqueda a entender la estructura de la página.
+      </div>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;header&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Encabezado de la página o de una sección. Generalmente contiene el logo, navegación principal y el título del sitio.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;nav&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Bloque de navegación principal. Contiene los enlaces de menú del sitio. Solo para navegación principal, no para todos los enlaces.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;main&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Contenido principal de la página. Solo debe haber uno por documento. No incluir header, footer ni nav aquí.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;section&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Agrupa contenido temáticamente relacionado. Debe tener su propio encabezado. Alternativa semántica al &lt;div&gt;.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;article&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Contenido independiente y reutilizable: una entrada de blog, una noticia, un comentario. Puede existir fuera de contexto.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;aside&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Contenido relacionado pero secundario al principal: barras laterales, publicidad, links relacionados.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;footer&gt;</span><span class="tag-type">Semántico</span></div>
+          <div class="tag-desc">Pie de página de la página o de una sección. Contiene información de copyright, contacto y enlaces secundarios.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;div&gt;</span><span class="tag-type">Genérico</span></div>
+          <div class="tag-desc">Contenedor genérico sin valor semántico. Úsalo solo cuando ninguna etiqueta semántica aplique. Es para agrupar con CSS.</div>
+        </div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">semantica.html</span></div>
+        <pre><span class="tg">&lt;body&gt;</span>
+  <span class="tg">&lt;header&gt;</span>
+    <span class="tg">&lt;h1&gt;</span><span class="vl">Mi Portafolio</span><span class="tg">&lt;/h1&gt;</span>
+    <span class="tg">&lt;nav&gt;</span>
+      <span class="tg">&lt;a</span> <span class="at">href=</span><span class="str">"#inicio"</span><span class="tg">&gt;</span><span class="vl">Inicio</span><span class="tg">&lt;/a&gt;</span>
+      <span class="tg">&lt;a</span> <span class="at">href=</span><span class="str">"#tareas"</span><span class="tg">&gt;</span><span class="vl">Tareas</span><span class="tg">&lt;/a&gt;</span>
+    <span class="tg">&lt;/nav&gt;</span>
+  <span class="tg">&lt;/header&gt;</span>
+
+  <span class="tg">&lt;main&gt;</span>
+    <span class="tg">&lt;section</span> <span class="at">id=</span><span class="str">"tareas"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;h2&gt;</span><span class="vl">Mis Tareas</span><span class="tg">&lt;/h2&gt;</span>
+      <span class="tg">&lt;article&gt;</span>
+        <span class="tg">&lt;h3&gt;</span><span class="vl">Tarea 1</span><span class="tg">&lt;/h3&gt;</span>
+        <span class="tg">&lt;p&gt;</span><span class="vl">Descripción...</span><span class="tg">&lt;/p&gt;</span>
+      <span class="tg">&lt;/article&gt;</span>
+    <span class="tg">&lt;/section&gt;</span>
+  <span class="tg">&lt;/main&gt;</span>
+
+  <span class="tg">&lt;footer&gt;</span>
+    <span class="tg">&lt;p&gt;</span><span class="vl">© 2025 Mi Portafolio</span><span class="tg">&lt;/p&gt;</span>
+  <span class="tg">&lt;/footer&gt;</span>
+<span class="tg">&lt;/body&gt;</span></pre>
+      </div>
+    </section>
+
+    <!-- 07 Formularios -->
+    <section class="section" id="formularios">
+      <p class="section-num">07 — Interacción</p>
+      <h2 class="section-title">Formularios</h2>
+      <p class="section-intro">Los formularios permiten recoger información del usuario. HTML5 introdujo nuevos tipos de campos que incluyen validación automática en el navegador.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;form&gt;</span><span class="tag-type">Contenedor</span></div>
+          <div class="tag-desc">Elemento raíz de un formulario. El atributo <code style="color:var(--accent2)">action</code> define a dónde enviar los datos y <code style="color:var(--accent2)">method</code> cómo enviarlos (GET o POST).</div>
+          <div class="tag-example">&lt;form action="/enviar" method="POST"&gt;<br/>  ...<br/>&lt;/form&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;input&gt;</span><span class="tag-type">Campo</span></div>
+          <div class="tag-desc">Campo de entrada de datos. El atributo <code style="color:var(--accent2)">type</code> define su comportamiento: text, email, password, number, date, checkbox, radio, file...</div>
+          <div class="tag-example">&lt;input type="email"<br/>       placeholder="tu@correo.com"<br/>       required/&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;label&gt;</span><span class="tag-type">Accesibilidad</span></div>
+          <div class="tag-desc">Etiqueta asociada a un campo. Mejora la accesibilidad. Con <code style="color:var(--accent2)">for</code> vincula al <code style="color:var(--accent2)">id</code> del input.</div>
+          <div class="tag-example">&lt;label for="nombre"&gt;Nombre:&lt;/label&gt;<br/>&lt;input id="nombre" type="text"/&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;textarea&gt;</span><span class="tag-type">Campo</span></div>
+          <div class="tag-desc">Área de texto multilínea. Los atributos <code style="color:var(--accent2)">rows</code> y <code style="color:var(--accent2)">cols</code> definen su tamaño inicial.</div>
+          <div class="tag-example">&lt;textarea rows="4"<br/>          placeholder="Tu mensaje..."&gt;<br/>&lt;/textarea&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;select&gt;</span><span class="tag-type">Campo</span></div>
+          <div class="tag-desc">Menú desplegable. Las opciones se definen con &lt;option&gt;. El atributo <code style="color:var(--accent2)">multiple</code> permite selección múltiple.</div>
+          <div class="tag-example">&lt;select name="lenguaje"&gt;<br/>  &lt;option value="html"&gt;HTML&lt;/option&gt;<br/>  &lt;option value="css"&gt;CSS&lt;/option&gt;<br/>&lt;/select&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;button&gt;</span><span class="tag-type">Acción</span></div>
+          <div class="tag-desc">Botón interactivo. <code style="color:var(--accent2)">type="submit"</code> envía el formulario. <code style="color:var(--accent2)">type="button"</code> lo deja para JavaScript.</div>
+          <div class="tag-example">&lt;button type="submit"&gt;<br/>  Enviar formulario<br/>&lt;/button&gt;</div>
+        </div>
+      </div>
+
+      <table class="attr-table" style="margin-top:1.5rem;">
+        <thead>
+          <tr><th>Tipo de input</th><th>Uso</th><th>Validación automática</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>text</td><td>Texto genérico</td><td>Longitud mínima/máxima</td></tr>
+          <tr><td>email</td><td>Correo electrónico</td><td>Formato de email válido</td></tr>
+          <tr><td>password</td><td>Contraseña (texto oculto)</td><td>Longitud mínima</td></tr>
+          <tr><td>number</td><td>Valor numérico</td><td>min, max, step</td></tr>
+          <tr><td>date</td><td>Fecha</td><td>Rango de fechas</td></tr>
+          <tr><td>checkbox</td><td>Opción booleana (sí/no)</td><td>required</td></tr>
+          <tr><td>radio</td><td>Selección única de grupo</td><td>required en el grupo</td></tr>
+          <tr><td>file</td><td>Subir archivo</td><td>accept (tipo de archivo)</td></tr>
+          <tr><td>url</td><td>Dirección web</td><td>Formato de URL válida</td></tr>
+          <tr><td>tel</td><td>Número telefónico</td><td>pattern personalizado</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 08 Multimedia -->
+    <section class="section" id="multimedia">
+      <p class="section-num">08 — Multimedia</p>
+      <h2 class="section-title">Multimedia en HTML5</h2>
+      <p class="section-intro">HTML5 incorporó soporte nativo para audio y video sin necesidad de plugins externos como Flash.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;video&gt;</span><span class="tag-type">Media</span></div>
+          <div class="tag-desc">Inserta un reproductor de video. Atributos clave: <code style="color:var(--accent2)">controls</code>, <code style="color:var(--accent2)">autoplay</code>, <code style="color:var(--accent2)">loop</code>, <code style="color:var(--accent2)">muted</code>, <code style="color:var(--accent2)">poster</code>.</div>
+          <div class="tag-example">&lt;video controls width="400"&gt;<br/>  &lt;source src="video.mp4" type="video/mp4"/&gt;<br/>  Tu navegador no soporta video.<br/>&lt;/video&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;audio&gt;</span><span class="tag-type">Media</span></div>
+          <div class="tag-desc">Inserta un reproductor de audio. Soporta múltiples formatos: MP3, OGG, WAV. Usa &lt;source&gt; para compatibilidad.</div>
+          <div class="tag-example">&lt;audio controls&gt;<br/>  &lt;source src="sonido.mp3" type="audio/mp3"/&gt;<br/>&lt;/audio&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;iframe&gt;</span><span class="tag-type">Embed</span></div>
+          <div class="tag-desc">Incrusta otro documento HTML o contenido externo (YouTube, Google Maps) dentro de la página.</div>
+          <div class="tag-example">&lt;iframe<br/>  src="https://youtube.com/embed/id"<br/>  width="560" height="315"<br/>  allowfullscreen&gt;<br/>&lt;/iframe&gt;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">&lt;canvas&gt;</span><span class="tag-type">Gráficos</span></div>
+          <div class="tag-desc">Área de dibujo programable mediante JavaScript. Permite crear gráficos, animaciones y juegos 2D directamente en el navegador.</div>
+          <div class="tag-example">&lt;canvas id="miCanvas"<br/>        width="400" height="300"&gt;<br/>&lt;/canvas&gt;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 Tablas -->
+    <section class="section" id="tablas">
+      <p class="section-num">09 — Datos</p>
+      <h2 class="section-title">Tablas</h2>
+      <p class="section-intro">Las tablas se usan para mostrar datos relacionales en filas y columnas. No deben usarse para maquetar páginas, eso es tarea del CSS.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">tabla.html</span></div>
+        <pre><span class="tg">&lt;table&gt;</span>
+  <span class="cm">&lt;!-- Encabezado de la tabla --&gt;</span>
+  <span class="tg">&lt;thead&gt;</span>
+    <span class="tg">&lt;tr&gt;</span>
+      <span class="tg">&lt;th&gt;</span><span class="vl">Lenguaje</span><span class="tg">&lt;/th&gt;</span>
+      <span class="tg">&lt;th&gt;</span><span class="vl">Tipo</span><span class="tg">&lt;/th&gt;</span>
+      <span class="tg">&lt;th&gt;</span><span class="vl">Año</span><span class="tg">&lt;/th&gt;</span>
+    <span class="tg">&lt;/tr&gt;</span>
+  <span class="tg">&lt;/thead&gt;</span>
+
+  <span class="cm">&lt;!-- Cuerpo de la tabla --&gt;</span>
+  <span class="tg">&lt;tbody&gt;</span>
+    <span class="tg">&lt;tr&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">HTML</span><span class="tg">&lt;/td&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">Marcado</span><span class="tg">&lt;/td&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">1991</span><span class="tg">&lt;/td&gt;</span>
+    <span class="tg">&lt;/tr&gt;</span>
+    <span class="tg">&lt;tr&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">CSS</span><span class="tg">&lt;/td&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">Estilos</span><span class="tg">&lt;/td&gt;</span>
+      <span class="tg">&lt;td&gt;</span><span class="vl">1996</span><span class="tg">&lt;/td&gt;</span>
+    <span class="tg">&lt;/tr&gt;</span>
+  <span class="tg">&lt;/tbody&gt;</span>
+
+  <span class="cm">&lt;!-- Pie de tabla (opcional) --&gt;</span>
+  <span class="tg">&lt;tfoot&gt;</span>
+    <span class="tg">&lt;tr&gt;</span>
+      <span class="tg">&lt;td</span> <span class="at">colspan=</span><span class="str">"3"</span><span class="tg">&gt;</span><span class="vl">Fuente: MDN Web Docs</span><span class="tg">&lt;/td&gt;</span>
+    <span class="tg">&lt;/tr&gt;</span>
+  <span class="tg">&lt;/tfoot&gt;</span>
+<span class="tg">&lt;/table&gt;</span></pre>
+      </div>
+
+      <table class="attr-table">
+        <thead><tr><th>Etiqueta</th><th>Función</th></tr></thead>
+        <tbody>
+          <tr><td>&lt;table&gt;</td><td>Contenedor principal de la tabla</td></tr>
+          <tr><td>&lt;thead&gt;</td><td>Agrupa las filas del encabezado</td></tr>
+          <tr><td>&lt;tbody&gt;</td><td>Agrupa las filas del cuerpo de datos</td></tr>
+          <tr><td>&lt;tfoot&gt;</td><td>Agrupa las filas del pie de tabla</td></tr>
+          <tr><td>&lt;tr&gt;</td><td>Define una fila (table row)</td></tr>
+          <tr><td>&lt;th&gt;</td><td>Celda de encabezado (negrita, centrado por defecto)</td></tr>
+          <tr><td>&lt;td&gt;</td><td>Celda de dato normal</td></tr>
+          <tr><td>colspan / rowspan</td><td>Fusionar columnas o filas</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10 Atributos globales -->
+    <section class="section" id="atributos">
+      <p class="section-num">10 — Atributos</p>
+      <h2 class="section-title">Atributos globales</h2>
+      <p class="section-intro">Los atributos globales pueden aplicarse a cualquier elemento HTML. Son la forma de pasar información adicional a las etiquetas.</p>
+
+      <table class="attr-table">
+        <thead><tr><th>Atributo</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id</td><td>Identificador único en el documento. Usado por CSS y JavaScript.</td><td>id="encabezado"</td></tr>
+          <tr><td>class</td><td>Clase CSS. Se pueden asignar múltiples clases separadas por espacio.</td><td>class="btn btn-verde"</td></tr>
+          <tr><td>style</td><td>Estilos CSS en línea. Evitar cuando sea posible, usar CSS externo.</td><td>style="color:red"</td></tr>
+          <tr><td>title</td><td>Texto descriptivo. Aparece como tooltip al pasar el cursor.</td><td>title="Más información"</td></tr>
+          <tr><td>lang</td><td>Idioma del contenido del elemento.</td><td>lang="es"</td></tr>
+          <tr><td>hidden</td><td>Oculta el elemento visualmente y del árbol de accesibilidad.</td><td>hidden</td></tr>
+          <tr><td>tabindex</td><td>Controla el orden de navegación con la tecla Tab.</td><td>tabindex="1"</td></tr>
+          <tr><td>data-*</td><td>Atributos personalizados para almacenar datos en el HTML.</td><td>data-id="42"</td></tr>
+          <tr><td>contenteditable</td><td>Permite al usuario editar el contenido del elemento.</td><td>contenteditable="true"</td></tr>
+          <tr><td>draggable</td><td>Define si el elemento puede ser arrastrado con drag & drop.</td><td>draggable="true"</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 11 Buenas prácticas -->
+    <section class="section" id="buenas-practicas">
+      <p class="section-num">11 — Calidad de código</p>
+      <h2 class="section-title">Buenas prácticas</h2>
+      <p class="section-intro">Escribir HTML de calidad va más allá de que funcione. Un buen código es legible, accesible, semántico y mantenible.</p>
+
+      <div class="concept-grid">
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Usa etiquetas semánticas</div>
+            <div class="concept-desc">Prefiere &lt;header&gt;, &lt;nav&gt;, &lt;main&gt;, &lt;article&gt; sobre divs sin significado.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Indenta tu código</div>
+            <div class="concept-desc">Usa 2 o 4 espacios de sangría para cada nivel de anidamiento. Facilita la lectura y el mantenimiento.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Alt en imágenes</div>
+            <div class="concept-desc">Siempre incluye el atributo alt en &lt;img&gt;. Si la imagen es decorativa, usa alt="" vacío.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Un solo H1 por página</div>
+            <div class="concept-desc">El H1 es el título principal. Debe haber exactamente uno por página para buen SEO.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Cierra tus etiquetas</div>
+            <div class="concept-desc">Aunque algunos navegadores toleran etiquetas sin cerrar, siempre ciérralas para evitar comportamiento inesperado.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Minúsculas siempre</div>
+            <div class="concept-desc">Escribe los nombres de etiquetas y atributos en minúsculas. Es el estándar HTML5.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Comillas en atributos</div>
+            <div class="concept-desc">Siempre pon los valores de atributos entre comillas: href="url" no href=url.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Valida tu HTML</div>
+            <div class="concept-desc">Usa el validador oficial del W3C (validator.w3.org) para detectar errores en tu código.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 Ejemplo completo -->
+    <section class="section" id="ejemplo-completo">
+      <p class="section-num">12 — Práctica</p>
+      <h2 class="section-title">Ejemplo completo</h2>
+      <p class="section-intro">Aquí tienes un documento HTML5 completo que aplica todo lo aprendido: estructura, semántica, texto, listas, enlaces, imágenes y formulario.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">portafolio.html</span></div>
+        <pre><span class="tg">&lt;!DOCTYPE</span> <span class="at">html</span><span class="tg">&gt;</span>
+<span class="tg">&lt;html</span> <span class="at">lang=</span><span class="str">"es"</span><span class="tg">&gt;</span>
+<span class="tg">&lt;head&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">charset=</span><span class="str">"UTF-8"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;meta</span> <span class="at">name=</span><span class="str">"viewport"</span> <span class="at">content=</span><span class="str">"width=device-width, initial-scale=1.0"</span><span class="tg">/&gt;</span>
+  <span class="tg">&lt;title&gt;</span><span class="vl">Mi Portafolio · Cultura Digital</span><span class="tg">&lt;/title&gt;</span>
+  <span class="tg">&lt;link</span> <span class="at">rel=</span><span class="str">"stylesheet"</span> <span class="at">href=</span><span class="str">"estilos.css"</span><span class="tg">/&gt;</span>
+<span class="tg">&lt;/head&gt;</span>
+<span class="tg">&lt;body&gt;</span>
+
+  <span class="tg">&lt;header&gt;</span>
+    <span class="tg">&lt;h1&gt;</span><span class="vl">Portafolio de Evidencias</span><span class="tg">&lt;/h1&gt;</span>
+    <span class="tg">&lt;nav&gt;</span>
+      <span class="tg">&lt;a</span> <span class="at">href=</span><span class="str">"#sobre-mi"</span><span class="tg">&gt;</span><span class="vl">Sobre mí</span><span class="tg">&lt;/a&gt;</span>
+      <span class="tg">&lt;a</span> <span class="at">href=</span><span class="str">"#tareas"</span><span class="tg">&gt;</span><span class="vl">Tareas</span><span class="tg">&lt;/a&gt;</span>
+      <span class="tg">&lt;a</span> <span class="at">href=</span><span class="str">"#contacto"</span><span class="tg">&gt;</span><span class="vl">Contacto</span><span class="tg">&lt;/a&gt;</span>
+    <span class="tg">&lt;/nav&gt;</span>
+  <span class="tg">&lt;/header&gt;</span>
+
+  <span class="tg">&lt;main&gt;</span>
+    <span class="tg">&lt;section</span> <span class="at">id=</span><span class="str">"sobre-mi"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;h2&gt;</span><span class="vl">Sobre mí</span><span class="tg">&lt;/h2&gt;</span>
+      <span class="tg">&lt;figure&gt;</span>
+        <span class="tg">&lt;img</span> <span class="at">src=</span><span class="str">"foto.jpg"</span> <span class="at">alt=</span><span class="str">"Mi foto de perfil"</span> <span class="at">width=</span><span class="str">"200"</span><span class="tg">/&gt;</span>
+        <span class="tg">&lt;figcaption&gt;</span><span class="vl">Estudiante de IA, 2° semestre</span><span class="tg">&lt;/figcaption&gt;</span>
+      <span class="tg">&lt;/figure&gt;</span>
+      <span class="tg">&lt;p&gt;</span><span class="vl">Soy estudiante de &lt;strong&gt;Inteligencia Artificial&lt;/strong&gt;.</span><span class="tg">&lt;/p&gt;</span>
+    <span class="tg">&lt;/section&gt;</span>
+
+    <span class="tg">&lt;section</span> <span class="at">id=</span><span class="str">"tareas"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;h2&gt;</span><span class="vl">Mis tareas</span><span class="tg">&lt;/h2&gt;</span>
+      <span class="tg">&lt;ul&gt;</span>
+        <span class="tg">&lt;li&gt;&lt;a</span> <span class="at">href=</span><span class="str">"tarea1.html"</span><span class="tg">&gt;</span><span class="vl">El padre del internet</span><span class="tg">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tg">&lt;li&gt;&lt;a</span> <span class="at">href=</span><span class="str">"tarea2.html"</span><span class="tg">&gt;</span><span class="vl">Lenguajes de programación</span><span class="tg">&lt;/a&gt;&lt;/li&gt;</span>
+        <span class="tg">&lt;li&gt;&lt;a</span> <span class="at">href=</span><span class="str">"tarea3.html"</span><span class="tg">&gt;</span><span class="vl">Guía de HTML5</span><span class="tg">&lt;/a&gt;&lt;/li&gt;</span>
+      <span class="tg">&lt;/ul&gt;</span>
+    <span class="tg">&lt;/section&gt;</span>
+
+    <span class="tg">&lt;section</span> <span class="at">id=</span><span class="str">"contacto"</span><span class="tg">&gt;</span>
+      <span class="tg">&lt;h2&gt;</span><span class="vl">Contacto</span><span class="tg">&lt;/h2&gt;</span>
+      <span class="tg">&lt;form</span> <span class="at">action=</span><span class="str">"/enviar"</span> <span class="at">method=</span><span class="str">"POST"</span><span class="tg">&gt;</span>
+        <span class="tg">&lt;label</span> <span class="at">for=</span><span class="str">"nombre"</span><span class="tg">&gt;</span><span class="vl">Nombre:</span><span class="tg">&lt;/label&gt;</span>
+        <span class="tg">&lt;input</span> <span class="at">id=</span><span class="str">"nombre"</span> <span class="at">type=</span><span class="str">"text"</span> <span class="at">required</span><span class="tg">/&gt;</span>
+        <span class="tg">&lt;label</span> <span class="at">for=</span><span class="str">"email"</span><span class="tg">&gt;</span><span class="vl">Email:</span><span class="tg">&lt;/label&gt;</span>
+        <span class="tg">&lt;input</span> <span class="at">id=</span><span class="str">"email"</span> <span class="at">type=</span><span class="str">"email"</span> <span class="at">required</span><span class="tg">/&gt;</span>
+        <span class="tg">&lt;button</span> <span class="at">type=</span><span class="str">"submit"</span><span class="tg">&gt;</span><span class="vl">Enviar</span><span class="tg">&lt;/button&gt;</span>
+      <span class="tg">&lt;/form&gt;</span>
+    <span class="tg">&lt;/section&gt;</span>
+  <span class="tg">&lt;/main&gt;</span>
+
+  <span class="tg">&lt;footer&gt;</span>
+    <span class="tg">&lt;p&gt;</span><span class="vl">© 2025 · Cultura Digital 2 · 2° Semestre de IA</span><span class="tg">&lt;/p&gt;</span>
+  <span class="tg">&lt;/footer&gt;</span>
+
+<span class="tg">&lt;/body&gt;</span>
+<span class="tg">&lt;/html&gt;</span></pre>
+      </div>
+
+      <div class="tip">
+        <strong>Siguiente paso:</strong> Una vez que dominas HTML, el siguiente paso es aprender CSS para darle estilo visual a tu estructura, y luego JavaScript para agregar interactividad. ¡Felicidades por completar la guía!
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Footer -->
+<footer style="border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:var(--font-body);font-size:13px;color:var(--dim);background:var(--surface);">
+  Tarea 3 · Guía HTML5 · Cultura Digital 2 · 2° Semestre de IA · 2025
+</footer>
+
+<script>
+  // Barra de progreso de lectura
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / total) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // Resaltar nav item activo según scroll
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const id = entry.target.id;
+        const active = document.querySelector(`.nav-item[href="#${id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.35 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

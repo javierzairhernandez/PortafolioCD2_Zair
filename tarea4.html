@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Guía CSS3 · Tarea 4 · Cultura Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #faf9f7;
+    --surface: #ffffff;
+    --card: #ffffff;
+    --border: #e8e4df;
+    --border-strong: #d0cbc4;
+    --accent: #c0392b;
+    --accent2: #922b21;
+    --accent-light: #fdf2f1;
+    --dim: #a89b94;
+    --text: #1c1713;
+    --muted: #6b5f58;
+    --font-display: 'Lora', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --code-bg: #1e1a18;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow: 0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 40px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.05);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 1.7; min-height: 100vh; }
+
+  .back-btn {
+    position: fixed; top: 20px; left: 20px; z-index: 100;
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-body); font-size: 13px; font-weight: 500;
+    color: var(--muted); text-decoration: none; padding: 8px 16px;
+    border: 1px solid var(--border); border-radius: 50px;
+    background: rgba(255,255,255,.92); backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-sm); transition: all .2s;
+  }
+  .back-btn:hover { color: var(--accent); border-color: var(--accent); box-shadow: var(--shadow); }
+
+  .hero {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 7rem 2rem 5rem; text-align: center;
+  }
+  .hero-badge {
+    display: inline-block; background: var(--accent-light); color: var(--accent);
+    font-family: var(--font-body); font-size: 12px; font-weight: 500;
+    letter-spacing: .06em; text-transform: uppercase; padding: 5px 16px;
+    border-radius: 50px; border: 1px solid rgba(192,57,43,.15); margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-family: var(--font-display); font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 700; line-height: 1.15; color: var(--text); margin-bottom: 1.25rem; letter-spacing: -.01em;
+  }
+  .hero-title span { color: var(--accent); font-style: italic; }
+  .hero-sub { font-size: 16px; color: var(--muted); max-width: 500px; margin: 0 auto; line-height: 1.7; font-weight: 300; }
+
+  .layout { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 210px 1fr; gap: 0; }
+  .sidebar {
+    position: sticky; top: 0; height: 100vh; overflow-y: auto;
+    border-right: 1px solid var(--border); padding: 2.5rem 0;
+    background: var(--surface); scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar { display: none; }
+  .sidebar-label { font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); padding: 0 1.4rem; margin-bottom: 1rem; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 1.4rem; font-family: var(--font-body); font-size: 13px; font-weight: 400; color: var(--muted); text-decoration: none; transition: color .15s, background .15s; border-left: 2px solid transparent; }
+  .nav-item:hover { color: var(--text); background: var(--bg); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-light); font-weight: 500; }
+  .nav-num { font-size: 11px; color: var(--dim); min-width: 18px; }
+
+  .main { padding: 3.5rem 3rem 6rem; }
+  .section { margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+  .section-num { font-family: var(--font-body); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: .4rem; }
+  .section-title { font-family: var(--font-display); font-size: clamp(1.4rem, 2.5vw, 1.85rem); font-weight: 700; color: var(--text); margin-bottom: .75rem; line-height: 1.2; }
+  .section-intro { font-size: 15px; color: var(--muted); line-height: 1.75; max-width: 620px; margin-bottom: 2rem; font-weight: 300; }
+
+  .info-card { background: var(--accent-light); border: 1px solid rgba(192,57,43,.12); border-radius: 10px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .info-card strong { color: var(--text); }
+
+  .tag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .tag-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow .2s, transform .2s; }
+  .tag-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .tag-header { display: flex; align-items: center; justify-content: space-between; padding: .85rem 1.1rem; border-bottom: 1px solid var(--border); background: var(--bg); }
+  .tag-name { font-family: var(--font-mono); font-size: .8rem; color: var(--accent); font-weight: 700; }
+  .tag-type { font-family: var(--font-body); font-size: 10px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); background: var(--surface); border: 1px solid var(--border); padding: 2px 8px; border-radius: 50px; }
+  .tag-desc { padding: .85rem 1.1rem; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  .tag-example { margin: 0 1.1rem .85rem; background: var(--code-bg); border-radius: 7px; padding: .65rem .9rem; font-family: var(--font-mono); font-size: .65rem; color: #c8b8a8; line-height: 1.7; overflow-x: auto; }
+
+  .code-block { background: var(--code-bg); border-radius: 12px; overflow: hidden; margin: 1.75rem 0; box-shadow: var(--shadow-lg); }
+  .code-topbar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,.06); background: #171310; }
+  .code-dots { display:flex; gap:6px; }
+  .code-dots span { width:10px; height:10px; border-radius:50%; }
+  .code-dots span:nth-child(1){background:#ff5f57;}
+  .code-dots span:nth-child(2){background:#febc2e;}
+  .code-dots span:nth-child(3){background:#28c840;}
+  .code-filename { font-family: var(--font-mono); font-size: .62rem; letter-spacing: .08em; color: #5a504a; }
+  pre { padding: 1.5rem 1.75rem; font-family: var(--font-mono); font-size: .72rem; line-height: 1.85; overflow-x: auto; color: #c8b8a8; }
+  .kw  { color: #e88080; font-weight: 700; }
+  .at  { color: #89b8e0; }
+  .str { color: #a8d8a0; }
+  .cm  { color: #4a3f38; }
+  .pr  { color: #e8c090; }
+  .vl  { color: #d8a8e0; }
+  .sel { color: #7ecfa8; font-weight: 700; }
+
+  .attr-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 1.5rem; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
+  .attr-table th { text-align: left; padding: .75rem 1.1rem; background: var(--text); color: #fff; font-size: 11px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; }
+  .attr-table td { padding: .7rem 1.1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; line-height: 1.6; background: var(--surface); }
+  .attr-table td:first-child { color: var(--accent); font-family: var(--font-mono); font-size: .75rem; white-space: nowrap; }
+  .attr-table tr:last-child td { border-bottom: none; }
+  .attr-table tr:hover td { background: var(--bg); }
+
+  .concept-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: .85rem; margin-top: 1.5rem; }
+  .concept-pill { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.15rem; display: flex; gap: .85rem; align-items: flex-start; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
+  .concept-pill:hover { box-shadow: var(--shadow); }
+  .concept-icon { font-size: 1.3rem; line-height: 1; margin-top: 1px; flex-shrink: 0; }
+  .concept-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .concept-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+
+  .tip { border-left: 3px solid var(--accent); padding: .9rem 1.3rem; background: var(--accent-light); border-radius: 0 8px 8px 0; margin: 1.75rem 0; font-size: 14px; color: var(--muted); line-height: 1.75; }
+  .tip strong { color: var(--accent); }
+
+  /* Preview visual de CSS */
+  .preview-box {
+    border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+    margin: 1.75rem 0; box-shadow: var(--shadow-sm);
+  }
+  .preview-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; background: var(--bg); border-bottom: 1px solid var(--border);
+  }
+  .preview-label { font-family: var(--font-mono); font-size: .62rem; color: var(--dim); letter-spacing: .08em; }
+  .preview-content { padding: 1.75rem; background: var(--surface); }
+
+  .progress-bar { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--border); z-index: 200; }
+  .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width .1s; border-radius: 0 2px 2px 0; }
+
+  @media(max-width:768px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 2rem 1.25rem 4rem; }
+    .hero { padding: 6rem 1.5rem 3.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<a class="back-btn" href="index.html">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  Volver al portafolio
+</a>
+
+<section class="hero">
+  <div class="hero-badge">Tarea 4 · Unidad 1 · Cultura Digital</div>
+  <h1 class="hero-title">
+    Guía para aprender<br/>
+    <span>CSS3</span>
+  </h1>
+  <p class="hero-sub">Desde cero hasta dominar selectores, propiedades, el modelo de caja, flexbox, grid y animaciones.</p>
+</section>
+
+<div class="layout">
+
+  <nav class="sidebar">
+    <p class="sidebar-label">Contenido</p>
+    <a class="nav-item active" href="#que-es"><span class="nav-num">01</span>¿Qué es CSS3?</a>
+    <a class="nav-item" href="#sintaxis"><span class="nav-num">02</span>Sintaxis y estructura</a>
+    <a class="nav-item" href="#selectores"><span class="nav-num">03</span>Selectores</a>
+    <a class="nav-item" href="#modelo-caja"><span class="nav-num">04</span>Modelo de caja</a>
+    <a class="nav-item" href="#tipografia"><span class="nav-num">05</span>Tipografía</a>
+    <a class="nav-item" href="#colores"><span class="nav-num">06</span>Colores y fondos</a>
+    <a class="nav-item" href="#display"><span class="nav-num">07</span>Display y posición</a>
+    <a class="nav-item" href="#flexbox"><span class="nav-num">08</span>Flexbox</a>
+    <a class="nav-item" href="#grid"><span class="nav-num">09</span>CSS Grid</a>
+    <a class="nav-item" href="#transiciones"><span class="nav-num">10</span>Transiciones</a>
+    <a class="nav-item" href="#animaciones"><span class="nav-num">11</span>Animaciones</a>
+    <a class="nav-item" href="#responsive"><span class="nav-num">12</span>Responsive Design</a>
+    <a class="nav-item" href="#variables"><span class="nav-num">13</span>Variables CSS</a>
+    <a class="nav-item" href="#ejemplo-completo"><span class="nav-num">14</span>Ejemplo completo</a>
+  </nav>
+
+  <main class="main">
+
+    <!-- 01 Qué es CSS3 -->
+    <section class="section" id="que-es">
+      <p class="section-num">01 — Introducción</p>
+      <h2 class="section-title">¿Qué es CSS3?</h2>
+      <p class="section-intro">CSS (Cascading Style Sheets) es el lenguaje que controla la apariencia visual de las páginas web. La versión 3 introdujo módulos independientes como Flexbox, Grid, animaciones, variables y mucho más.</p>
+
+      <div class="concept-grid">
+        <div class="concept-pill">
+          <div class="concept-icon">🎨</div>
+          <div>
+            <div class="concept-name">Lenguaje de estilos</div>
+            <div class="concept-desc">CSS no es un lenguaje de programación. Define cómo se ven los elementos HTML: colores, tamaños, posiciones.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">📁</div>
+          <div>
+            <div class="concept-name">Archivo .css</div>
+            <div class="concept-desc">Los estilos se guardan en archivos .css y se vinculan al HTML con la etiqueta &lt;link&gt; dentro del &lt;head&gt;.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">🌊</div>
+          <div>
+            <div class="concept-name">Cascada</div>
+            <div class="concept-desc">Los estilos se aplican en cascada: si dos reglas aplican al mismo elemento, gana la más específica o la última declarada.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">🔗</div>
+          <div>
+            <div class="concept-name">Separación de responsabilidades</div>
+            <div class="concept-desc">HTML estructura el contenido, CSS lo estiliza. Mantenerlos separados hace el código más limpio y fácil de mantener.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">📱</div>
+          <div>
+            <div class="concept-name">Responsive Design</div>
+            <div class="concept-desc">Con CSS puedes adaptar el diseño a cualquier tamaño de pantalla usando media queries y unidades flexibles.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">⚡</div>
+          <div>
+            <div class="concept-name">Tres formas de usar CSS</div>
+            <div class="concept-desc">Externo (archivo .css), interno (&lt;style&gt; en el &lt;head&gt;) o en línea (atributo style=""  en el elemento).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tip">
+        <strong>Tip:</strong> Siempre usa CSS externo en un archivo separado. Es la forma más ordenada, reutilizable y fácil de mantener.
+      </div>
+    </section>
+
+    <!-- 02 Sintaxis -->
+    <section class="section" id="sintaxis">
+      <p class="section-num">02 — Fundamentos</p>
+      <h2 class="section-title">Sintaxis y estructura de una regla CSS</h2>
+      <p class="section-intro">Toda regla CSS tiene la misma estructura: un selector que apunta al elemento, y una o más declaraciones de propiedad y valor dentro de llaves.</p>
+
+      <div class="info-card">
+        <strong>Anatomía de una regla CSS:</strong><br/>
+        <code style="color:var(--accent)">selector</code> { <code style="color:#89b8e0">propiedad</code>: <code style="color:#a8d8a0">valor</code>; }
+        <br/><br/>
+        El <strong>selector</strong> indica a qué elementos HTML se aplica el estilo. La <strong>propiedad</strong> es la característica visual a modificar. El <strong>valor</strong> define cómo debe verse.
+      </div>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">estilos.css</span></div>
+        <pre><span class="cm">/* Regla CSS básica */</span>
+<span class="sel">h1</span> {
+  <span class="pr">color</span>: <span class="vl">#c0392b</span>;
+  <span class="pr">font-size</span>: <span class="vl">2rem</span>;
+  <span class="pr">font-weight</span>: <span class="vl">700</span>;
+  <span class="pr">text-align</span>: <span class="vl">center</span>;
+}
+
+<span class="cm">/* Múltiples propiedades */</span>
+<span class="sel">p</span> {
+  <span class="pr">font-size</span>: <span class="vl">16px</span>;
+  <span class="pr">line-height</span>: <span class="vl">1.6</span>;
+  <span class="pr">color</span>: <span class="vl">#444</span>;
+  <span class="pr">margin-bottom</span>: <span class="vl">1rem</span>;
+}
+
+<span class="cm">/* Varios selectores, mismo estilo */</span>
+<span class="sel">h1, h2, h3</span> {
+  <span class="pr">font-family</span>: <span class="vl">'Georgia', serif</span>;
+}</pre>
+      </div>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">Comentarios</span><span class="tag-type">Sintaxis</span></div>
+          <div class="tag-desc">Los comentarios en CSS van entre <code>/* */</code>. El navegador los ignora. Úsalos para documentar tu código.</div>
+          <div class="tag-example">/* Esto es un comentario */</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">Unidades</span><span class="tag-type">Valores</span></div>
+          <div class="tag-desc"><strong>px</strong>: píxeles fijos. <strong>rem</strong>: relativo al root. <strong>em</strong>: relativo al padre. <strong>%</strong>: porcentaje del contenedor. <strong>vw/vh</strong>: porcentaje del viewport.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">Especificidad</span><span class="tag-type">Cascada</span></div>
+          <div class="tag-desc">El orden de prioridad es: <strong>!important</strong> &gt; estilos en línea &gt; IDs &gt; clases &gt; etiquetas. A mayor especificidad, mayor prioridad.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">Herencia</span><span class="tag-type">Cascada</span></div>
+          <div class="tag-desc">Algunas propiedades como <code>color</code> y <code>font-family</code> se heredan de los elementos padre a los hijos automáticamente.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 Selectores -->
+    <section class="section" id="selectores">
+      <p class="section-num">03 — Selectores</p>
+      <h2 class="section-title">Selectores CSS</h2>
+      <p class="section-intro">Los selectores son patrones que indican a qué elementos del HTML se aplicarán los estilos. CSS ofrece una gran variedad para apuntar a elementos con precisión.</p>
+
+      <table class="attr-table">
+        <thead><tr><th>Selector</th><th>Sintaxis</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Etiqueta</td><td><code>p { }</code></td><td>Aplica a todos los elementos &lt;p&gt; de la página</td></tr>
+          <tr><td>Clase</td><td><code>.card { }</code></td><td>Aplica a todos los elementos con class="card"</td></tr>
+          <tr><td>ID</td><td><code>#menu { }</code></td><td>Aplica al elemento único con id="menu"</td></tr>
+          <tr><td>Universal</td><td><code>* { }</code></td><td>Aplica a todos los elementos de la página</td></tr>
+          <tr><td>Descendiente</td><td><code>nav a { }</code></td><td>Todos los &lt;a&gt; dentro de un &lt;nav&gt;</td></tr>
+          <tr><td>Hijo directo</td><td><code>ul > li { }</code></td><td>Solo los &lt;li&gt; hijos directos de &lt;ul&gt;</td></tr>
+          <tr><td>Adyacente</td><td><code>h1 + p { }</code></td><td>El &lt;p&gt; que va inmediatamente después de &lt;h1&gt;</td></tr>
+          <tr><td>Atributo</td><td><code>input[type="email"] { }</code></td><td>Elementos con un atributo específico</td></tr>
+          <tr><td>:hover</td><td><code>a:hover { }</code></td><td>Cuando el cursor está sobre el elemento</td></tr>
+          <tr><td>:focus</td><td><code>input:focus { }</code></td><td>Cuando el elemento tiene el foco del teclado</td></tr>
+          <tr><td>:first-child</td><td><code>li:first-child { }</code></td><td>El primer hijo de su elemento padre</td></tr>
+          <tr><td>:last-child</td><td><code>li:last-child { }</code></td><td>El último hijo de su elemento padre</td></tr>
+          <tr><td>:nth-child(n)</td><td><code>tr:nth-child(2n) { }</code></td><td>Cada segundo hijo (filas pares de una tabla)</td></tr>
+          <tr><td>::before</td><td><code>p::before { }</code></td><td>Pseudo-elemento que inserta contenido antes del elemento</td></tr>
+          <tr><td>::after</td><td><code>p::after { }</code></td><td>Pseudo-elemento que inserta contenido después del elemento</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">selectores.css</span></div>
+        <pre><span class="cm">/* Selector de clase */</span>
+<span class="sel">.boton</span> {
+  <span class="pr">background</span>: <span class="vl">#c0392b</span>;
+  <span class="pr">color</span>: <span class="vl">white</span>;
+  <span class="pr">padding</span>: <span class="vl">10px 24px</span>;
+  <span class="pr">border-radius</span>: <span class="vl">6px</span>;
+}
+
+<span class="cm">/* Pseudo-clase hover */</span>
+<span class="sel">.boton:hover</span> {
+  <span class="pr">background</span>: <span class="vl">#922b21</span>;
+  <span class="pr">cursor</span>: <span class="vl">pointer</span>;
+}
+
+<span class="cm">/* Selector combinado */</span>
+<span class="sel">nav > ul > li:first-child a</span> {
+  <span class="pr">font-weight</span>: <span class="vl">bold</span>;
+  <span class="pr">color</span>: <span class="vl">#c0392b</span>;
+}</pre>
+      </div>
+    </section>
+
+    <!-- 04 Modelo de caja -->
+    <section class="section" id="modelo-caja">
+      <p class="section-num">04 — Modelo de caja</p>
+      <h2 class="section-title">El modelo de caja (Box Model)</h2>
+      <p class="section-intro">En CSS, todo elemento es una caja rectangular. El modelo de caja describe el espacio que ocupa: contenido, relleno, borde y margen.</p>
+
+      <div class="info-card">
+        <strong>Las 4 capas del Box Model (de adentro hacia afuera):</strong><br/>
+        <strong style="color:var(--accent)">Content</strong> → el contenido real (texto, imagen) ·
+        <strong style="color:var(--accent)">Padding</strong> → espacio interno entre contenido y borde ·
+        <strong style="color:var(--accent)">Border</strong> → el borde del elemento ·
+        <strong style="color:var(--accent)">Margin</strong> → espacio externo entre este elemento y los demás
+      </div>
+
+      <!-- Preview visual del box model -->
+      <div class="preview-box">
+        <div class="preview-bar"><span class="preview-label">Vista previa · Box Model</span></div>
+        <div class="preview-content" style="display:flex;justify-content:center;">
+          <div style="background:#fdf2f1;border:2px dashed #c0392b;padding:8px;display:inline-block;font-family:'Courier New',monospace;font-size:11px;color:#922b21;">
+            <div style="text-align:center;margin-bottom:4px;color:#a89b94;">margin</div>
+            <div style="background:#fae0dc;border:2px solid #c0392b;padding:8px;">
+              <div style="text-align:center;margin-bottom:4px;color:#922b21;">border</div>
+              <div style="background:#fff3f2;padding:12px;">
+                <div style="text-align:center;margin-bottom:4px;color:#c0392b;">padding</div>
+                <div style="background:#c0392b;color:white;padding:14px 24px;text-align:center;border-radius:3px;">
+                  content
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">margin</span><span class="tag-type">Espaciado</span></div>
+          <div class="tag-desc">Espacio exterior. Separa el elemento de sus vecinos. Acepta valores individuales o abreviados.</div>
+          <div class="tag-example">margin: 16px;           /* todos lados */<br/>margin: 8px 16px;       /* arriba/abajo  izq/der */<br/>margin: 0 auto;         /* centrar horizontalmente */</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">padding</span><span class="tag-type">Espaciado</span></div>
+          <div class="tag-desc">Espacio interior entre el contenido y el borde. La misma sintaxis que margin.</div>
+          <div class="tag-example">padding: 20px;          /* todos lados */<br/>padding: 10px 20px;     /* ver/hor */<br/>padding-top: 8px;       /* lado específico */</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">border</span><span class="tag-type">Borde</span></div>
+          <div class="tag-desc">Define el borde del elemento. Se especifica grosor, estilo y color.</div>
+          <div class="tag-example">border: 1px solid #ccc;<br/>border-radius: 8px;<br/>border-top: 3px solid red;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">box-sizing</span><span class="tag-type">Modelo</span></div>
+          <div class="tag-desc"><code>border-box</code> hace que padding y border se incluyan en el width/height declarado. Recomendado siempre.</div>
+          <div class="tag-example">* {<br/>  box-sizing: border-box;<br/>}</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">width / height</span><span class="tag-type">Dimensiones</span></div>
+          <div class="tag-desc">Definen el ancho y alto del área de contenido. Puedes usar px, %, rem, vw, vh o auto.</div>
+          <div class="tag-example">width: 300px;<br/>max-width: 100%;<br/>height: auto;<br/>min-height: 200px;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">overflow</span><span class="tag-type">Desbordamiento</span></div>
+          <div class="tag-desc">Controla qué pasa cuando el contenido supera el tamaño del contenedor: visible, hidden, scroll, auto.</div>
+          <div class="tag-example">overflow: hidden;<br/>overflow-x: auto;<br/>overflow-y: scroll;</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Tipografía -->
+    <section class="section" id="tipografia">
+      <p class="section-num">05 — Tipografía</p>
+      <h2 class="section-title">Propiedades tipográficas</h2>
+      <p class="section-intro">CSS ofrece un control total sobre la tipografía: fuentes, tamaños, peso, espaciado e interlineado. Una buena tipografía es clave en el diseño web.</p>
+
+      <table class="attr-table">
+        <thead><tr><th>Propiedad</th><th>Valores comunes</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>font-family</td><td>'Arial', sans-serif</td><td>Define la fuente. Siempre incluye una fuente genérica de respaldo.</td></tr>
+          <tr><td>font-size</td><td>16px, 1rem, 1.2em</td><td>Tamaño del texto. Preferir rem para accesibilidad.</td></tr>
+          <tr><td>font-weight</td><td>400 (normal), 700 (bold)</td><td>Grosor del texto. Va de 100 a 900.</td></tr>
+          <tr><td>font-style</td><td>normal, italic, oblique</td><td>Estilo de la fuente.</td></tr>
+          <tr><td>line-height</td><td>1.5, 1.6, 24px</td><td>Interlineado. Sin unidad es multiplicador del font-size.</td></tr>
+          <tr><td>letter-spacing</td><td>0.05em, 2px</td><td>Espaciado entre letras.</td></tr>
+          <tr><td>text-align</td><td>left, center, right, justify</td><td>Alineación horizontal del texto.</td></tr>
+          <tr><td>text-decoration</td><td>none, underline, line-through</td><td>Subrayado y decoraciones del texto.</td></tr>
+          <tr><td>text-transform</td><td>uppercase, lowercase, capitalize</td><td>Transformación de mayúsculas/minúsculas.</td></tr>
+          <tr><td>text-shadow</td><td>2px 2px 4px rgba(0,0,0,.3)</td><td>Sombra del texto: x y blur color.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">tipografia.css</span></div>
+        <pre><span class="cm">/* Importar Google Font */</span>
+<span class="kw">@import</span> <span class="str">url('https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap')</span>;
+
+<span class="sel">body</span> {
+  <span class="pr">font-family</span>: <span class="vl">'Lora', Georgia, serif</span>;
+  <span class="pr">font-size</span>: <span class="vl">16px</span>;
+  <span class="pr">line-height</span>: <span class="vl">1.7</span>;
+  <span class="pr">color</span>: <span class="vl">#1c1713</span>;
+}
+
+<span class="sel">h1</span> {
+  <span class="pr">font-size</span>: <span class="vl">clamp(2rem, 5vw, 3.5rem)</span>;
+  <span class="pr">font-weight</span>: <span class="vl">700</span>;
+  <span class="pr">letter-spacing</span>: <span class="vl">-0.02em</span>;
+  <span class="pr">text-transform</span>: <span class="vl">none</span>;
+}</pre>
+      </div>
+    </section>
+
+    <!-- 06 Colores y fondos -->
+    <section class="section" id="colores">
+      <p class="section-num">06 — Colores y Fondos</p>
+      <h2 class="section-title">Colores y propiedades de fondo</h2>
+      <p class="section-intro">CSS admite múltiples formatos para definir colores y ofrece poderosas propiedades para estilizar los fondos de los elementos.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">color</span><span class="tag-type">Texto</span></div>
+          <div class="tag-desc">Define el color del texto. Admite nombres, hexadecimal, RGB, RGBA, HSL.</div>
+          <div class="tag-example">color: red;<br/>color: #c0392b;<br/>color: rgb(192, 57, 43);<br/>color: rgba(0,0,0, 0.5);<br/>color: hsl(5, 63%, 46%);</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">background</span><span class="tag-type">Fondo</span></div>
+          <div class="tag-desc">Propiedad abreviada para definir el fondo: color, imagen, posición, tamaño y repetición.</div>
+          <div class="tag-example">background: #faf9f7;<br/>background: url('img.jpg') center/cover no-repeat;<br/>background: linear-gradient(135deg, #red, #blue);</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">opacity</span><span class="tag-type">Transparencia</span></div>
+          <div class="tag-desc">Transparencia del elemento completo (incluye hijos). Va de 0 (invisible) a 1 (opaco). Distinto de rgba.</div>
+          <div class="tag-example">opacity: 1;     /* opaco */<br/>opacity: 0.5;   /* 50% transparente */<br/>opacity: 0;     /* invisible */</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">box-shadow</span><span class="tag-type">Sombra</span></div>
+          <div class="tag-desc">Sombra de la caja: desplazamiento x/y, desenfoque, extensión y color. Se pueden combinar múltiples sombras.</div>
+          <div class="tag-example">box-shadow: 0 4px 16px rgba(0,0,0,.1);<br/>box-shadow: inset 0 2px 4px rgba(0,0,0,.06);</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">gradient</span><span class="tag-type">Degradado</span></div>
+          <div class="tag-desc">Fondos degradados sin imagen. Linear (lineal) y radial (circular). Se aplica como valor de background.</div>
+          <div class="tag-example">background: linear-gradient(to right, #c0392b, #e74c3c);<br/>background: radial-gradient(circle, #fff, #eee);</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">filter</span><span class="tag-type">Filtros</span></div>
+          <div class="tag-desc">Efectos visuales sobre el elemento: blur, brightness, contrast, grayscale, saturate, etc.</div>
+          <div class="tag-example">filter: blur(4px);<br/>filter: brightness(0.85);<br/>filter: grayscale(100%);</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 Display y posición -->
+    <section class="section" id="display">
+      <p class="section-num">07 — Display y Posición</p>
+      <h2 class="section-title">Display y posicionamiento</h2>
+      <p class="section-intro">La propiedad display define cómo se comporta un elemento en el flujo del documento. position controla su ubicación en la página.</p>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">display: block</span><span class="tag-type">Display</span></div>
+          <div class="tag-desc">Ocupa todo el ancho disponible y fuerza un salto de línea. Comportamiento por defecto de &lt;div&gt;, &lt;p&gt;, &lt;h1&gt;, etc.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">display: inline</span><span class="tag-type">Display</span></div>
+          <div class="tag-desc">Solo ocupa el espacio de su contenido, no genera salto de línea. No acepta width/height. Por defecto en &lt;span&gt;, &lt;a&gt;, &lt;strong&gt;.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">display: inline-block</span><span class="tag-type">Display</span></div>
+          <div class="tag-desc">Combinación: en línea con otros elementos pero acepta width, height, padding y margin verticales.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">display: none</span><span class="tag-type">Display</span></div>
+          <div class="tag-desc">Oculta el elemento completamente, como si no existiera. No ocupa espacio. Distinto de visibility: hidden.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">position: relative</span><span class="tag-type">Posición</span></div>
+          <div class="tag-desc">El elemento se posiciona relativo a su lugar original en el flujo. Usa top, right, bottom, left para desplazarlo.</div>
+          <div class="tag-example">position: relative;<br/>top: 10px;<br/>left: 20px;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">position: absolute</span><span class="tag-type">Posición</span></div>
+          <div class="tag-desc">Se posiciona respecto al ancestro más cercano con position distinto de static. Sale del flujo normal.</div>
+          <div class="tag-example">position: absolute;<br/>top: 0;<br/>right: 0;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">position: fixed</span><span class="tag-type">Posición</span></div>
+          <div class="tag-desc">Se posiciona respecto al viewport (pantalla). Permanece fijo al hacer scroll. Ideal para navbars y botones flotantes.</div>
+          <div class="tag-example">position: fixed;<br/>top: 0;<br/>width: 100%;</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">z-index</span><span class="tag-type">Capas</span></div>
+          <div class="tag-desc">Controla el orden de apilamiento de elementos posicionados. Mayor número = encima. Solo funciona con position distinto de static.</div>
+          <div class="tag-example">z-index: 10;<br/>z-index: 100;<br/>z-index: -1; /* detrás */</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 Flexbox -->
+    <section class="section" id="flexbox">
+      <p class="section-num">08 — Flexbox</p>
+      <h2 class="section-title">CSS Flexbox</h2>
+      <p class="section-intro">Flexbox es un modelo de diseño que permite distribuir y alinear elementos en una dimensión (fila o columna) de forma flexible y sencilla.</p>
+
+      <div class="info-card">
+        <strong>Cómo activarlo:</strong> Aplicar <code style="color:var(--accent)">display: flex</code> al contenedor padre convierte a todos sus hijos directos en "flex items" y activa el contexto flex.
+      </div>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">flexbox.css</span></div>
+        <pre><span class="cm">/* Contenedor flex */</span>
+<span class="sel">.contenedor</span> {
+  <span class="pr">display</span>: <span class="vl">flex</span>;
+  <span class="pr">flex-direction</span>: <span class="vl">row</span>;         <span class="cm">/* row | column | row-reverse */</span>
+  <span class="pr">justify-content</span>: <span class="vl">space-between</span>; <span class="cm">/* eje principal */</span>
+  <span class="pr">align-items</span>: <span class="vl">center</span>;          <span class="cm">/* eje secundario */</span>
+  <span class="pr">flex-wrap</span>: <span class="vl">wrap</span>;              <span class="cm">/* permitir salto de línea */</span>
+  <span class="pr">gap</span>: <span class="vl">16px</span>;                    <span class="cm">/* espacio entre items */</span>
+}
+
+<span class="cm">/* Item flex */</span>
+<span class="sel">.item</span> {
+  <span class="pr">flex</span>: <span class="vl">1</span>;       <span class="cm">/* crece para llenar espacio */</span>
+  <span class="pr">flex</span>: <span class="vl">0 0 200px</span>; <span class="cm">/* no crece, no encoge, base 200px */</span>
+  <span class="pr">align-self</span>: <span class="vl">flex-start</span>; <span class="cm">/* alineación individual */</span>
+}</pre>
+      </div>
+
+      <table class="attr-table">
+        <thead><tr><th>Propiedad</th><th>Valores</th><th>Se aplica en</th></tr></thead>
+        <tbody>
+          <tr><td>flex-direction</td><td>row, column, row-reverse, column-reverse</td><td>Contenedor</td></tr>
+          <tr><td>justify-content</td><td>flex-start, flex-end, center, space-between, space-around</td><td>Contenedor</td></tr>
+          <tr><td>align-items</td><td>stretch, flex-start, flex-end, center, baseline</td><td>Contenedor</td></tr>
+          <tr><td>flex-wrap</td><td>nowrap, wrap, wrap-reverse</td><td>Contenedor</td></tr>
+          <tr><td>gap</td><td>16px, 1rem, 8px 16px</td><td>Contenedor</td></tr>
+          <tr><td>flex</td><td>1 (crecer), 0 0 200px (fijo)</td><td>Item</td></tr>
+          <tr><td>align-self</td><td>auto, flex-start, flex-end, center, stretch</td><td>Item</td></tr>
+          <tr><td>order</td><td>0 (defecto), -1 (primero), 1 (último)</td><td>Item</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 09 Grid -->
+    <section class="section" id="grid">
+      <p class="section-num">09 — CSS Grid</p>
+      <h2 class="section-title">CSS Grid</h2>
+      <p class="section-intro">Grid es el sistema de maquetación bidimensional de CSS. Permite crear layouts complejos con filas y columnas de forma declarativa y precisa.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">grid.css</span></div>
+        <pre><span class="cm">/* Contenedor grid */</span>
+<span class="sel">.grid</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+  <span class="pr">grid-template-columns</span>: <span class="vl">repeat(3, 1fr)</span>;   <span class="cm">/* 3 columnas iguales */</span>
+  <span class="pr">grid-template-rows</span>: <span class="vl">auto 1fr auto</span>;
+  <span class="pr">gap</span>: <span class="vl">24px</span>;
+}
+
+<span class="cm">/* Columnas responsive sin media queries */</span>
+<span class="sel">.grid-auto</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+  <span class="pr">grid-template-columns</span>: <span class="vl">repeat(auto-fill, minmax(280px, 1fr))</span>;
+  <span class="pr">gap</span>: <span class="vl">1.5rem</span>;
+}
+
+<span class="cm">/* Item que ocupa varias columnas */</span>
+<span class="sel">.item-ancho</span> {
+  <span class="pr">grid-column</span>: <span class="vl">1 / 3</span>;    <span class="cm">/* de columna 1 a 3 */</span>
+  <span class="pr">grid-row</span>: <span class="vl">span 2</span>;      <span class="cm">/* ocupa 2 filas */</span>
+}</pre>
+      </div>
+
+      <div class="tag-grid">
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">fr (fracción)</span><span class="tag-type">Unidad</span></div>
+          <div class="tag-desc">Unidad exclusiva de Grid. Representa una fracción del espacio disponible. <code>1fr 2fr</code> = una parte y dos partes.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">repeat()</span><span class="tag-type">Función</span></div>
+          <div class="tag-desc">Atajo para repetir columnas o filas. <code>repeat(4, 1fr)</code> = cuatro columnas iguales.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">minmax()</span><span class="tag-type">Función</span></div>
+          <div class="tag-desc">Define un rango de tamaño mínimo y máximo. <code>minmax(200px, 1fr)</code> = mínimo 200px, máximo lo que alcance.</div>
+        </div>
+        <div class="tag-card">
+          <div class="tag-header"><span class="tag-name">auto-fill / auto-fit</span><span class="tag-type">Palabras clave</span></div>
+          <div class="tag-desc">Con minmax crean layouts responsivos automáticamente. auto-fill mantiene columnas vacías; auto-fit las colapsa.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 Transiciones -->
+    <section class="section" id="transiciones">
+      <p class="section-num">10 — Transiciones</p>
+      <h2 class="section-title">Transiciones CSS</h2>
+      <p class="section-intro">Las transiciones permiten animar suavemente el cambio de un valor de propiedad a otro, como al hacer hover. Se configuran en el estado inicial del elemento.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">transiciones.css</span></div>
+        <pre><span class="sel">.boton</span> {
+  <span class="pr">background</span>: <span class="vl">#c0392b</span>;
+  <span class="pr">color</span>: <span class="vl">white</span>;
+  <span class="pr">padding</span>: <span class="vl">12px 28px</span>;
+  <span class="pr">border-radius</span>: <span class="vl">6px</span>;
+
+  <span class="cm">/* Transición: propiedad duración timing */</span>
+  <span class="pr">transition</span>: <span class="vl">background 0.25s ease, transform 0.2s ease</span>;
+}
+
+<span class="sel">.boton:hover</span> {
+  <span class="pr">background</span>: <span class="vl">#922b21</span>;
+  <span class="pr">transform</span>: <span class="vl">translateY(-2px)</span>;
+}
+
+<span class="cm">/* Transición de todas las propiedades */</span>
+<span class="sel">.card</span> {
+  <span class="pr">transition</span>: <span class="vl">all 0.3s ease</span>;
+}</pre>
+      </div>
+
+      <table class="attr-table">
+        <thead><tr><th>Propiedad</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>transition-property</td><td>Qué propiedad animar (all, color, transform...)</td></tr>
+          <tr><td>transition-duration</td><td>Duración de la animación (0.3s, 300ms)</td></tr>
+          <tr><td>transition-timing-function</td><td>Curva de velocidad: ease, linear, ease-in, ease-out, ease-in-out, cubic-bezier()</td></tr>
+          <tr><td>transition-delay</td><td>Esperar antes de iniciar la transición (0.1s, 100ms)</td></tr>
+          <tr><td>transition (abreviado)</td><td>propiedad duración timing delay</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 11 Animaciones -->
+    <section class="section" id="animaciones">
+      <p class="section-num">11 — Animaciones</p>
+      <h2 class="section-title">Animaciones con @keyframes</h2>
+      <p class="section-intro">Las animaciones CSS permiten crear movimientos complejos con múltiples pasos, sin necesidad de JavaScript, usando @keyframes y la propiedad animation.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">animaciones.css</span></div>
+        <pre><span class="cm">/* 1. Definir la animación con @keyframes */</span>
+<span class="kw">@keyframes</span> <span class="sel">aparecer</span> {
+  <span class="kw">from</span> {
+    <span class="pr">opacity</span>: <span class="vl">0</span>;
+    <span class="pr">transform</span>: <span class="vl">translateY(20px)</span>;
+  }
+  <span class="kw">to</span> {
+    <span class="pr">opacity</span>: <span class="vl">1</span>;
+    <span class="pr">transform</span>: <span class="vl">translateY(0)</span>;
+  }
+}
+
+<span class="cm">/* 2. Aplicarla al elemento */</span>
+<span class="sel">.tarjeta</span> {
+  <span class="pr">animation</span>: <span class="vl">aparecer 0.6s ease both</span>;
+}
+
+<span class="cm">/* Múltiples pasos con porcentajes */</span>
+<span class="kw">@keyframes</span> <span class="sel">pulsar</span> {
+  <span class="vl">0%</span>   { <span class="pr">transform</span>: <span class="vl">scale(1)</span>; }
+  <span class="vl">50%</span>  { <span class="pr">transform</span>: <span class="vl">scale(1.05)</span>; }
+  <span class="vl">100%</span> { <span class="pr">transform</span>: <span class="vl">scale(1)</span>; }
+}
+
+<span class="sel">.icono</span> {
+  <span class="pr">animation</span>: <span class="vl">pulsar 2s ease-in-out infinite</span>;
+}</pre>
+      </div>
+
+      <table class="attr-table">
+        <thead><tr><th>Propiedad</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>animation-name</td><td>Nombre del @keyframes a usar</td></tr>
+          <tr><td>animation-duration</td><td>Cuánto dura un ciclo (1s, 500ms)</td></tr>
+          <tr><td>animation-timing-function</td><td>Curva de velocidad: ease, linear, steps()</td></tr>
+          <tr><td>animation-delay</td><td>Espera antes de iniciar</td></tr>
+          <tr><td>animation-iteration-count</td><td>Veces que se repite: 1, 3, infinite</td></tr>
+          <tr><td>animation-direction</td><td>normal, reverse, alternate, alternate-reverse</td></tr>
+          <tr><td>animation-fill-mode</td><td>Estado antes/después: none, forwards, backwards, both</td></tr>
+          <tr><td>animation (abreviado)</td><td>nombre duración timing delay iteraciones dirección fill-mode</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 12 Responsive -->
+    <section class="section" id="responsive">
+      <p class="section-num">12 — Responsive Design</p>
+      <h2 class="section-title">Diseño Responsivo y Media Queries</h2>
+      <p class="section-intro">El responsive design adapta la apariencia de una página a distintos tamaños de pantalla. CSS lo logra principalmente con media queries y unidades relativas.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">responsive.css</span></div>
+        <pre><span class="cm">/* Estilos base (mobile first) */</span>
+<span class="sel">.grid</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+  <span class="pr">grid-template-columns</span>: <span class="vl">1fr</span>;  <span class="cm">/* 1 columna en móvil */</span>
+  <span class="pr">gap</span>: <span class="vl">1rem</span>;
+}
+
+<span class="cm">/* Tablet: 768px en adelante */</span>
+<span class="kw">@media</span> (<span class="pr">min-width</span>: <span class="vl">768px</span>) {
+  <span class="sel">.grid</span> {
+    <span class="pr">grid-template-columns</span>: <span class="vl">repeat(2, 1fr)</span>;
+  }
+}
+
+<span class="cm">/* Escritorio: 1024px en adelante */</span>
+<span class="kw">@media</span> (<span class="pr">min-width</span>: <span class="vl">1024px</span>) {
+  <span class="sel">.grid</span> {
+    <span class="pr">grid-template-columns</span>: <span class="vl">repeat(3, 1fr)</span>;
+  }
+  <span class="sel">.sidebar</span> {
+    <span class="pr">display</span>: <span class="vl">block</span>;
+  }
+}
+
+<span class="cm">/* Preferencia de movimiento reducido */</span>
+<span class="kw">@media</span> (<span class="pr">prefers-reduced-motion</span>: <span class="vl">reduce</span>) {
+  <span class="sel">*</span> { <span class="pr">animation</span>: <span class="vl">none</span>; <span class="pr">transition</span>: <span class="vl">none</span>; }
+}</pre>
+      </div>
+
+      <div class="tip">
+        <strong>Mobile First:</strong> Diseña primero para pantallas pequeñas y luego agrega estilos para pantallas más grandes con <code>min-width</code>. Es la estrategia recomendada actualmente.
+      </div>
+    </section>
+
+    <!-- 13 Variables CSS -->
+    <section class="section" id="variables">
+      <p class="section-num">13 — Variables CSS</p>
+      <h2 class="section-title">Variables CSS (Custom Properties)</h2>
+      <p class="section-intro">Las variables CSS permiten definir valores reutilizables en un solo lugar. Son ideales para paletas de colores, tipografías y espaciados consistentes en todo el proyecto.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">variables.css</span></div>
+        <pre><span class="cm">/* Definir variables en :root (global) */</span>
+<span class="sel">:root</span> {
+  <span class="pr">--color-primario</span>: <span class="vl">#c0392b</span>;
+  <span class="pr">--color-texto</span>: <span class="vl">#1c1713</span>;
+  <span class="pr">--fuente-display</span>: <span class="vl">'Lora', Georgia, serif</span>;
+  <span class="pr">--espacio-md</span>: <span class="vl">1rem</span>;
+  <span class="pr">--radio-borde</span>: <span class="vl">8px</span>;
+  <span class="pr">--sombra</span>: <span class="vl">0 4px 16px rgba(0,0,0,.07)</span>;
+}
+
+<span class="cm">/* Usar variables con var() */</span>
+<span class="sel">.boton</span> {
+  <span class="pr">background</span>: <span class="vl">var(--color-primario)</span>;
+  <span class="pr">font-family</span>: <span class="vl">var(--fuente-display)</span>;
+  <span class="pr">padding</span>: <span class="vl">var(--espacio-md)</span>;
+  <span class="pr">border-radius</span>: <span class="vl">var(--radio-borde)</span>;
+  <span class="pr">box-shadow</span>: <span class="vl">var(--sombra)</span>;
+}
+
+<span class="cm">/* Sobreescribir en un contexto específico */</span>
+<span class="sel">.tema-oscuro</span> {
+  <span class="pr">--color-texto</span>: <span class="vl">#ede0e0</span>;
+  <span class="pr">--color-primario</span>: <span class="vl">#ff6b6b</span>;
+}</pre>
+      </div>
+
+      <div class="concept-grid">
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Consistencia</div>
+            <div class="concept-desc">Cambias una variable y se actualiza en todo el sitio automáticamente.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Legibilidad</div>
+            <div class="concept-desc"><code>var(--color-primario)</code> es más descriptivo que <code>#c0392b</code>.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Temas de color</div>
+            <div class="concept-desc">Cambiar entre modo claro y oscuro es tan simple como cambiar los valores de las variables.</div>
+          </div>
+        </div>
+        <div class="concept-pill">
+          <div class="concept-icon">✅</div>
+          <div>
+            <div class="concept-name">Valor de respaldo</div>
+            <div class="concept-desc"><code>var(--color, red)</code> usa "red" si la variable no está definida.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14 Ejemplo completo -->
+    <section class="section" id="ejemplo-completo">
+      <p class="section-num">14 — Práctica</p>
+      <h2 class="section-title">Ejemplo completo</h2>
+      <p class="section-intro">Una hoja de estilos completa que aplica todo lo aprendido: variables, tipografía, modelo de caja, flexbox, grid, transiciones y responsive design.</p>
+
+      <div class="code-block">
+        <div class="code-topbar"><div class="code-dots"><span></span><span></span><span></span></div><span class="code-filename">portafolio.css</span></div>
+        <pre><span class="cm">/* ── Variables globales ── */</span>
+<span class="sel">:root</span> {
+  <span class="pr">--bg</span>: <span class="vl">#0a0808</span>;
+  <span class="pr">--surface</span>: <span class="vl">#160f0f</span>;
+  <span class="pr">--accent</span>: <span class="vl">#ff3333</span>;
+  <span class="pr">--text</span>: <span class="vl">#ede0e0</span>;
+  <span class="pr">--muted</span>: <span class="vl">#8a6060</span>;
+  <span class="pr">--border</span>: <span class="vl">#2a1515</span>;
+  <span class="pr">--font</span>: <span class="vl">'Syne', sans-serif</span>;
+  <span class="pr">--shadow</span>: <span class="vl">0 4px 20px rgba(0,0,0,.4)</span>;
+}
+
+<span class="cm">/* ── Reset base ── */</span>
+<span class="sel">*, *::before, *::after</span> {
+  <span class="pr">box-sizing</span>: <span class="vl">border-box</span>;
+  <span class="pr">margin</span>: <span class="vl">0</span>;
+  <span class="pr">padding</span>: <span class="vl">0</span>;
+}
+
+<span class="sel">body</span> {
+  <span class="pr">background</span>: <span class="vl">var(--bg)</span>;
+  <span class="pr">color</span>: <span class="vl">var(--text)</span>;
+  <span class="pr">font-family</span>: <span class="vl">var(--font)</span>;
+  <span class="pr">line-height</span>: <span class="vl">1.7</span>;
+}
+
+<span class="cm">/* ── Layout con Grid ── */</span>
+<span class="sel">.cards-grid</span> {
+  <span class="pr">display</span>: <span class="vl">grid</span>;
+  <span class="pr">grid-template-columns</span>: <span class="vl">repeat(auto-fill, minmax(300px, 1fr))</span>;
+  <span class="pr">gap</span>: <span class="vl">1.5rem</span>;
+  <span class="pr">padding</span>: <span class="vl">2rem</span>;
+}
+
+<span class="cm">/* ── Card con Flexbox ── */</span>
+<span class="sel">.card</span> {
+  <span class="pr">background</span>: <span class="vl">var(--surface)</span>;
+  <span class="pr">border</span>: <span class="vl">1px solid var(--border)</span>;
+  <span class="pr">border-radius</span>: <span class="vl">12px</span>;
+  <span class="pr">display</span>: <span class="vl">flex</span>;
+  <span class="pr">flex-direction</span>: <span class="vl">column</span>;
+  <span class="pr">overflow</span>: <span class="vl">hidden</span>;
+  <span class="pr">box-shadow</span>: <span class="vl">var(--shadow)</span>;
+  <span class="pr">transition</span>: <span class="vl">transform 0.3s ease, border-color 0.3s ease</span>;
+}
+
+<span class="sel">.card:hover</span> {
+  <span class="pr">transform</span>: <span class="vl">translateY(-6px)</span>;
+  <span class="pr">border-color</span>: <span class="vl">var(--accent)</span>;
+}
+
+<span class="cm">/* ── Responsive ── */</span>
+<span class="kw">@media</span> (<span class="pr">max-width</span>: <span class="vl">640px</span>) {
+  <span class="sel">.cards-grid</span> {
+    <span class="pr">grid-template-columns</span>: <span class="vl">1fr</span>;
+    <span class="pr">padding</span>: <span class="vl">1rem</span>;
+  }
+}</pre>
+      </div>
+
+      <div class="tip">
+        <strong>Siguiente paso:</strong> Con HTML y CSS dominados, el siguiente nivel es JavaScript, que añade lógica e interactividad. También puedes explorar frameworks de CSS como Tailwind o preprocesadores como SASS para escribir estilos más eficientes.
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:2rem;text-align:center;font-family:var(--font-body);font-size:13px;color:var(--dim);">
+  Tarea 4 · Guía CSS3 · Cultura Digital 2 · 2° Semestre de IA · 2025
+</footer>
+
+<script>
+  window.addEventListener('scroll', () => {
+    const total = document.body.scrollHeight - window.innerHeight;
+    document.getElementById('progress').style.width = (window.scrollY / total * 100) + '%';
+  });
+
+  const sections = document.querySelectorAll('.section');
+  const navItems = document.querySelectorAll('.nav-item');
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const a = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 }).observe(sections[0]) || sections.forEach(s =>
+    new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          navItems.forEach(n => n.classList.remove('active'));
+          const a = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    }, { threshold: 0.3 }).observe(s)
+  );
+</script>
+</body>
+</html>
