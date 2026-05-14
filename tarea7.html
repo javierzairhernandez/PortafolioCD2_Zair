@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Componentes de Arduino — Guía de Referencia</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #111318;
+    --bg3: #181c23;
+    --card: #13161d;
+    --border: #1e2530;
+    --border2: #2a3040;
+    --accent: #00d4aa;
+    --accent2: #0099ff;
+    --accent3: #ff6b35;
+    --text: #e8ecf0;
+    --text2: #8a9ab0;
+    --text3: #4a5568;
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'Barlow', sans-serif;
+    --cond: 'Barlow Condensed', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid de fondo */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid var(--border2);
+    background: linear-gradient(180deg, #0d1017 0%, transparent 100%);
+    padding: 0 2rem;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    padding: 8px 16px;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .back-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    transition: transform 0.2s;
+    z-index: -1;
+  }
+
+  .back-btn:hover { color: #0a0c0f; }
+  .back-btn:hover::before { transform: translateX(0); }
+
+  .back-arrow { font-size: 14px; }
+
+  .header-badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+  }
+
+  .header-main {
+    padding: 2rem 0;
+  }
+
+  .header-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  h1 {
+    font-family: var(--cond);
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-sub {
+    margin-top: 0.8rem;
+    font-size: 14px;
+    color: var(--text2);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 22px;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* Filtros de categoría */
+  .filters {
+    position: relative;
+    z-index: 10;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    margin-right: 6px;
+  }
+
+  .filter-btn {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 6px 14px;
+    border: 1px solid var(--border2);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0, 212, 170, 0.06);
+  }
+
+  /* Grid principal */
+  main {
+    position: relative;
+    z-index: 5;
+    padding: 2rem;
+  }
+
+  .section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    padding: 4px 8px;
+    border: 1px solid var(--border2);
+  }
+
+  .section-title {
+    font-family: var(--cond);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--border2), transparent);
+  }
+
+  .section-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5px;
+  }
+
+  /* Card individual */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover {
+    border-color: var(--border2);
+    background: #161a22;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .card:hover::before { transform: scaleX(1); }
+
+  /* Distintos colores de acento por categoría */
+  .card.sensor::before { background: var(--accent); }
+  .card.modulo::before { background: var(--accent2); }
+  .card.actuador::before { background: var(--accent3); }
+  .card.comunicacion::before { background: #a855f7; }
+  .card.alimentacion::before { background: #f59e0b; }
+  .card.display::before { background: #ec4899; }
+
+  .card-img-area {
+    width: 100%;
+    height: 180px;
+    background: var(--bg3);
+    border-bottom: 0px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-img-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 0px;
+  }
+
+  .img-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+
+  .img-placeholder-icon {
+    width: 200px;
+    height: 200px;
+    border: 0px dashed var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .img-placeholder-icon svg {
+    width: 0px;
+    height: 0px;
+    stroke: var(--text3);
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .img-placeholder-text {
+    font-family: var(--mono);
+    font-size: 0px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+
+  .img-corner {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    border: 1px solid var(--border2);
+    padding: 2px 6px;
+    background: var(--bg);
+  }
+
+  .card-body {
+    padding: 1.2rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 20px;
+    padding: 3px 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .card-tag.sensor { background: rgba(0, 212, 170, 0.1); color: var(--accent); border: 1px solid rgba(0, 212, 170, 0.25); }
+  .card-tag.modulo { background: rgba(0, 153, 255, 0.1); color: var(--accent2); border: 1px solid rgba(0, 153, 255, 0.25); }
+  .card-tag.actuador { background: rgba(255, 107, 53, 0.1); color: var(--accent3); border: 1px solid rgba(255, 107, 53, 0.25); }
+  .card-tag.comunicacion { background: rgba(168, 85, 247, 0.1); color: #a855f7; border: 1px solid rgba(168, 85, 247, 0.25); }
+  .card-tag.alimentacion { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.25); }
+  .card-tag.display { background: rgba(236, 72, 153, 0.1); color: #ec4899; border: 1px solid rgba(236, 72, 153, 0.25); }
+
+  .card-id {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  .card-name {
+    font-family: var(--cond);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    font-weight: 300;
+    flex: 1;
+  }
+
+  .card-use {
+    border-top: 1px solid var(--border);
+    padding-top: 0.8rem;
+  }
+
+  .card-use-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-use-text {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+
+  .card-pins {
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+    margin-top: 0.6rem;
+  }
+
+  .pin-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--text3);
+  }
+
+  /* Footer */
+  footer {
+    position: relative;
+    z-index: 5;
+    border-top: 10px solid var(--border);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+  }
+
+  .footer-text span { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    main, .filters, header { padding-left: 1rem; padding-right: 1rem; }
+    .stats-bar { gap: 1.2rem; }
+    .cards-grid { grid-template-columns: 1fr; gap: 1px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html" class="back-btn" onclick="history.back(); return false;">
+      <span class="back-arrow">&#8592;</span> Volver al portafolio
+    </a>
+    <span class="header-badge">v2.1 — REFERENCIA TÉCNICA</span>
+  </div>
+  <div class="header-main">
+    <div class="header-label">// Guía de hardware</div>
+    <h1>Componentes de <span>Arduino</span></h1>
+    <p class="header-sub">Catálogo completo de sensores, módulos, actuadores y hardware compatible. Cada componente con descripción técnica y aplicaciones prácticas.</p>
+    <div class="stats-bar">
+      <div class="stat">
+        <span class="stat-num">35+</span>
+        <span class="stat-label">Componentes</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">6</span>
+        <span class="stat-label">Categorías</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Compatible</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="filters">
+  <span class="filter-label">FILTRAR //</span>
+  <button class="filter-btn active" onclick="filterCards('all', this)">Todos</button>
+  <button class="filter-btn" onclick="filterCards('sensor', this)">Sensores</button>
+  <button class="filter-btn" onclick="filterCards('modulo', this)">Módulos</button>
+  <button class="filter-btn" onclick="filterCards('actuador', this)">Actuadores</button>
+  <button class="filter-btn" onclick="filterCards('comunicacion', this)">Comunicación</button>
+  <button class="filter-btn" onclick="filterCards('alimentacion', this)">Alimentación</button>
+  <button class="filter-btn" onclick="filterCards('display', this)">Displays</button>
+</div>
+
+<main>
+
+  <!-- SENSORES -->
+  <div class="section" data-cat="sensor">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Sensores</h2>
+      <div class="section-line"></div>
+      <span class="section-count">10 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- DHT11 -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-001</span>
+          </div>
+          <h3 class="card-name">Sensor DHT11 / DHT22</h3>
+          <p class="card-desc">Sensor digital de temperatura y humedad relativa del ambiente. El DHT11 mide entre 0–50 °C y 20–90% HR. El DHT22 es más preciso: −40 a 80 °C y 0–100% HR. Trabaja con un solo pin de datos y protocolo 1-Wire.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Estaciones meteorológicas caseras, control de invernaderos, sistemas de climatización, monitoreo de bodegas o servidores.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">DATA digital</span>
+            <span class="pin-badge">GND</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- HC-SR04 -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>HC-SR04</p>
+          </div>
+          <span class="img-corner">SEN-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-002</span>
+          </div>
+          <h3 class="card-name">Sensor Ultrasónico HC-SR04</h3>
+          <p class="card-desc">Sensor de distancia por ultrasonido. Emite un pulso de 40 kHz y mide el tiempo de retorno del eco para calcular la distancia. Rango de 2 cm a 400 cm con precisión de ±3 mm. No requiere contacto físico con el objeto.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Detección de obstáculos en robots, medición de nivel de líquidos, sistemas de estacionamiento, alarmas de proximidad.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">TRIG digital</span>
+            <span class="pin-badge">ECHO digital</span>
+            <span class="pin-badge">GND</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIR -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+            <img src="imagenes/sensor3.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-003</span>
+          </div>
+          <h3 class="card-name">Sensor PIR (Movimiento)</h3>
+          <p class="card-desc">Sensor infrarrojo pasivo (Passive Infrared) que detecta cambios en la radiación IR del entorno, especialmente la emitida por cuerpos cálidos en movimiento. Incluye potenciómetros para ajustar sensibilidad y tiempo de retardo. Cubre hasta 7 metros y 120° de ángulo.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Alarmas de seguridad, activación automática de luces, conteo de personas, sistemas de presencia en habitaciones.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5–12V</span>
+            <span class="pin-badge">OUT digital</span>
+            <span class="pin-badge">GND</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LDR -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor4.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-004</span>
+          </div>
+          <h3 class="card-name">LDR — Fotorresistencia</h3>
+          <p class="card-desc">Resistencia dependiente de la luz (Light Dependent Resistor). Su valor en ohms varía inversamente con la intensidad luminosa: en oscuridad puede llegar a 1 MΩ y bajo luz intensa baja a pocos cientos de Ω. Se usa junto a un divisor de tensión para leer valores analógicos.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Encendido automático de luces al oscurecer, seguidor solar, detección de día/noche, alarmas de luz en cuartos oscuros.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">Analógico A0–A5</span>
+            <span class="pin-badge">Divisor de voltaje</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor de llama -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor5.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-005</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-005</span>
+          </div>
+          <h3 class="card-name">Sensor de Llama / Fuego</h3>
+          <p class="card-desc">Fotodetector infrarrojo sensible a la longitud de onda emitida por una llama (760–1100 nm). Detecta fuego a distancias de hasta 100 cm dependiendo del tamaño de la flama. Tiene salida digital (umbral ajustable con potenciómetro) y salida analógica.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Sistemas de detección de incendios, robots apaga-fuegos, alarmas de seguridad en cocinas o laboratorios.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">D0 digital</span>
+            <span class="pin-badge">A0 analógico</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor de gas MQ -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor6.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-006</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-006</span>
+          </div>
+          <h3 class="card-name">Sensor de Gas MQ-2 / MQ-135</h3>
+          <p class="card-desc">Sensor electroquímico que detecta concentraciones de gases en el aire. El MQ-2 detecta GLP, humo, metano e hidrógeno. El MQ-135 detecta CO₂, NH₃, alcohol, benceno y humo. Requieren precalentamiento de 24–48 horas para calibración óptima.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Detectores de fugas de gas doméstico, calidad del aire interior, sistemas de ventilación automática, alarmas de CO₂.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">D0 digital</span>
+            <span class="pin-badge">A0 analógico</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor de lluvia -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor7.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-007</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-007</span>
+          </div>
+          <h3 class="card-name">Sensor de Lluvia</h3>
+          <p class="card-desc">Placa detectora de agua compuesta por pistas conductoras que al ser cubiertas por agua cierran un circuito y cambian la resistencia. La placa de control convierte esto en señal digital o analógica. Resistente a la exposición directa a la lluvia.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Detección de lluvia para activar toldos o cerrar ventanas automáticamente, sistemas de riego inteligente, estaciones meteorológicas.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">D0 digital</span>
+            <span class="pin-badge">A0 analógico</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sensor de suelo -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor8.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-008</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-008</span>
+          </div>
+          <h3 class="card-name">Sensor de Humedad de Suelo</h3>
+          <p class="card-desc">Dos electrodos que se insertan en la tierra y miden la conductividad del suelo, que varía con la humedad. A mayor humedad, menor resistencia y mayor voltaje de salida. La versión capacitiva es más duradera ya que no sufre de corrosión en los electrodos.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Sistemas de riego automático para plantas, agricultura inteligente, monitoreo de jardines y macetas, huertos domésticos.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">A0 analógico</span>
+            <span class="pin-badge">D0 digital</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MPU6050 -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor9.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-009</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-009</span>
+          </div>
+          <h3 class="card-name">IMU MPU-6050 (Giroscopio + Acelerómetro)</h3>
+          <p class="card-desc">Unidad de medición inercial de 6 ejes: acelerómetro triaxial y giroscopio triaxial en un solo chip. Se comunica por I²C. Mide aceleración (±2g a ±16g), velocidad angular (±250 a ±2000 °/s) y tiene sensor de temperatura integrado.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Drones y estabilizadores, robots de equilibrio, guantes de realidad virtual, detección de gestos, podómetros DIY.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V</span>
+            <span class="pin-badge">I²C (SDA/SCL)</span>
+            <span class="pin-badge">INT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NTC Termistor -->
+      <div class="card sensor" data-cat="sensor">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/sensor10.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+          </div>
+          <span class="img-corner">SEN-010</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag sensor">Sensor</span>
+            <span class="card-id">#SEN-010</span>
+          </div>
+          <h3 class="card-name">Sensor de Temperatura DS18B20</h3>
+          <p class="card-desc">Sensor digital de temperatura en formato TO-92 (similar a transistor) que usa el protocolo 1-Wire. Rango de −55 °C a +125 °C con resolución de hasta 12 bits (0.0625 °C). Varios sensores pueden compartir el mismo pin de datos con direcciones únicas.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Medición precisa de temperatura en agua o superficies, control de temperatura en impresoras 3D, termostatos, fermentación.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">DATA 1-Wire</span>
+            <span class="pin-badge">4.7kΩ pullup</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MÓDULOS -->
+  <div class="section" data-cat="modulo">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Módulos</h2>
+      <div class="section-line"></div>
+      <span class="section-count">8 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- Módulo relé -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo Relé 5V</p>
+          </div>
+          <span class="img-corner">MOD-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-001</span>
+          </div>
+          <h3 class="card-name">Módulo Relé 5V (1/2/4/8 canales)</h3>
+          <p class="card-desc">Interruptor electromagnético controlado por señal digital. Permite a Arduino controlar cargas de alta potencia (hasta 250V AC / 10A). Incluye optoacoplador para aislar el circuito de control del circuito de carga. Disponible en versiones de 1, 2, 4 u 8 canales.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Encender/apagar electrodomésticos, controlar focos de 220V, activar motores de alta potencia, automatización del hogar.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">IN digital</span>
+            <span class="pin-badge">NC/NO/COM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo SD -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo Lector MicroSD</p>
+          </div>
+          <span class="img-corner">MOD-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-002</span>
+          </div>
+          <h3 class="card-name">Módulo Lector MicroSD</h3>
+          <p class="card-desc">Adaptador para tarjetas MicroSD que se comunica con Arduino via SPI. Soporta tarjetas de hasta 32 GB en formato FAT16 o FAT32. Opera a 3.3V lógico con conversor de nivel integrado para ser compatible con los 5V de Arduino.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Guardar datos de sensores (datalogger), reproducir archivos de audio, almacenar configuraciones o imágenes para displays.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">SPI (MISO/MOSI/SCK)</span>
+            <span class="pin-badge">CS</span>
+            <span class="pin-badge">VCC 5V</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RTC DS3231 -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo3.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo RTC DS3231</p>
+          </div>
+          <span class="img-corner">MOD-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-003</span>
+          </div>
+          <h3 class="card-name">Módulo RTC DS3231 (Reloj en tiempo real)</h3>
+          <p class="card-desc">Chip de reloj en tiempo real con oscilador de cristal compensado por temperatura (TCXO). Mantiene hora y fecha precisas aunque Arduino esté apagado gracias a una batería de respaldo CR2032. Deriva menos de 2 minutos por año. Comunicación I²C.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Registrar la hora exacta en dataloggers, despertadores, sistemas de riego programados, marcadores de tiempo para eventos.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">I²C (SDA/SCL)</span>
+            <span class="pin-badge">SQW</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RFID RC522 -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo4.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo RFID RC522</p>
+          </div>
+          <span class="img-corner">MOD-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-004</span>
+          </div>
+          <h3 class="card-name">Módulo RFID RC522</h3>
+          <p class="card-desc">Lector/escritor de tarjetas y llaveros RFID a 13.56 MHz (estándar ISO 14443A). Lee el UID único de cada tag y puede escribir datos en la memoria del tag. Viene con una tarjeta y un llavero de prueba. Alcance de lectura de hasta 5 cm. Comunicación SPI.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Control de acceso con tarjeta, sistemas de asistencia, identificación de objetos, pago o registro con tarjeta personalizada.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V</span>
+            <span class="pin-badge">SPI (MISO/MOSI/SCK)</span>
+            <span class="pin-badge">SDA / RST</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo cargador TP4056 -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo5.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo Cargador TP4056</p>
+          </div>
+          <span class="img-corner">MOD-005</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-005</span>
+          </div>
+          <h3 class="card-name">Módulo Cargador Li-Po TP4056</h3>
+          <p class="card-desc">Cargador de baterías de litio (Li-Ion / Li-Po) vía micro-USB. Carga a corriente constante/voltaje constante (CC/CV) con corte automático al llegar a 4.2V. La versión con protección incluye circuito de protección contra sobrecarga, sobredescarga y cortocircuito.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Proyectos portátiles con batería recargable, wearables, sensores inalámbricos alimentados con batería de celular.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">USB-C/MicroUSB entrada</span>
+            <span class="pin-badge">BAT+ / BAT−</span>
+            <span class="pin-badge">OUT+ / OUT−</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo PWM PCA9685 -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo6.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo PWM PCA9685</p>
+          </div>
+          <span class="img-corner">MOD-006</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-006</span>
+          </div>
+          <h3 class="card-name">Módulo PWM PCA9685 (16 canales)</h3>
+          <p class="card-desc">Controlador PWM de 16 canales con resolución de 12 bits por canal, controlado por I²C. Permite manejar hasta 16 servomotores simultáneamente usando solo 2 pines de Arduino. Múltiples módulos se pueden encadenar para hasta 992 salidas PWM.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Brazos robóticos con muchos servos, hexápodos, control de LEDs RGB múltiples, drivers de motores DC independientes.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">I²C (SDA/SCL)</span>
+            <span class="pin-badge">V+ hasta 6V (servos)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo MP3 DFPlayer -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo7.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo MP3 DFPlayer Mini</p>
+          </div>
+          <span class="img-corner">MOD-007</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-007</span>
+          </div>
+          <h3 class="card-name">Módulo MP3 DFPlayer Mini</h3>
+          <p class="card-desc">Reproductor de audio MP3 completo con lector de tarjeta MicroSD integrado. Soporta MP3, WAV y WMA. Tiene amplificador de 3W integrado para conectar un altavoz directamente. Se controla por puerto serie (UART) con comandos simples. Soporta hasta 32 GB.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Agregar audio a proyectos: robots parlantes, alarmas con sonido personalizado, juguetes interactivos, museos interactivos.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.2–5V</span>
+            <span class="pin-badge">TX / RX UART</span>
+            <span class="pin-badge">SPK+ / SPK−</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Módulo L298N -->
+      <div class="card modulo" data-cat="modulo">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/modulo8.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Driver Motor L298N</p>
+          </div>
+          <span class="img-corner">MOD-008</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag modulo">Módulo</span>
+            <span class="card-id">#MOD-008</span>
+          </div>
+          <h3 class="card-name">Driver de Motor L298N</h3>
+          <p class="card-desc">Puente H doble que permite controlar 2 motores DC o 1 motor paso a paso (stepper) con control de dirección y velocidad (PWM). Soporta voltajes de motor de 5V a 35V y corriente de hasta 2A por canal. Incluye regulador de 5V para alimentar Arduino.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Robots con ruedas, carritos controlados, control de motores DC bidireccionales, impresoras 3D simples, automatizaciones.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">IN1–IN4 digital</span>
+            <span class="pin-badge">ENA / ENB PWM</span>
+            <span class="pin-badge">OUT A/B (motor)</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- COMUNICACIÓN -->
+  <div class="section" data-cat="comunicacion">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Comunicación Inalámbrica</h2>
+      <div class="section-line"></div>
+      <span class="section-count">5 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- HC-05 Bluetooth -->
+      <div class="card comunicacion" data-cat="comunicacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+             <img src="imagenes/comunicacion1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo Bluetooth HC-05</p>
+          </div>
+          <span class="img-corner">COM-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag comunicacion">Comunicación</span>
+            <span class="card-id">#COM-001</span>
+          </div>
+          <h3 class="card-name">Módulo Bluetooth HC-05 / HC-06</h3>
+          <p class="card-desc">Módulo Bluetooth 2.0 clásico que actúa como puerto serie inalámbrico (SPP). El HC-05 puede ser maestro o esclavo; el HC-06 solo esclavo. Se configura con comandos AT vía UART. Alcance de hasta 10 metros en interiores. Compatible con cualquier dispositivo Bluetooth.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Control de robots desde smartphone, envío de datos de sensores al celular, comunicación entre dos Arduinos, mandos de juego.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.6–6V</span>
+            <span class="pin-badge">TX / RX UART</span>
+            <span class="pin-badge">STATE / EN</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESP8266 WiFi -->
+      <div class="card comunicacion" data-cat="comunicacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/comunicacion2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo WiFi ESP8266</p>
+          </div>
+          <span class="img-corner">COM-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag comunicacion">Comunicación</span>
+            <span class="card-id">#COM-002</span>
+          </div>
+          <h3 class="card-name">Módulo WiFi ESP8266 (ESP-01)</h3>
+          <p class="card-desc">Microcontrolador con WiFi 802.11 b/g/n integrado. Como módulo para Arduino se controla por comandos AT via UART. También puede programarse directamente con el IDE de Arduino como placa independiente. Opera solo a 3.3V y requiere fuente de corriente suficiente (hasta 250 mA).</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Conectar proyectos a internet, enviar datos a plataformas IoT (Blynk, ThingSpeak), servidores web locales, domótica WiFi.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V (250mA)</span>
+            <span class="pin-badge">TX / RX UART</span>
+            <span class="pin-badge">CH_PD / RST</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- NRF24L01 -->
+      <div class="card comunicacion" data-cat="comunicacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/comunicacion3.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;"></svg>
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Transceptor NRF24L01</p>
+          </div>
+          <span class="img-corner">COM-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag comunicacion">Comunicación</span>
+            <span class="card-id">#COM-003</span>
+          </div>
+          <h3 class="card-name">Transceptor RF NRF24L01+</h3>
+          <p class="card-desc">Radio transceptor de 2.4 GHz con velocidad de hasta 2 Mbps. Hasta 125 canales independientes y 6 direcciones de recepción simultáneas. La versión con antena externa alcanza hasta 1000 metros en campo abierto. Opera a 3.3V pero tolera señales de 5V. Comunicación SPI.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Red de sensores inalámbrica, control remoto de largo alcance, comunicación entre varios Arduinos, telemetría de drones.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V</span>
+            <span class="pin-badge">SPI (MISO/MOSI/SCK)</span>
+            <span class="pin-badge">CE / CSN / IRQ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LoRa Ra-02 -->
+      <div class="card comunicacion" data-cat="comunicacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/comunicacion4.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo LoRa Ra-02 / SX1278</p>
+          </div>
+          <span class="img-corner">COM-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag comunicacion">Comunicación</span>
+            <span class="card-id">#COM-004</span>
+          </div>
+          <h3 class="card-name">Módulo LoRa SX1278 (433 MHz)</h3>
+          <p class="card-desc">Módulo de radiofrecuencia de largo alcance (Long Range) que usa modulación LoRa chirp spread spectrum. Alcance de hasta 10 km en campo abierto con bajo consumo energético. Velocidad de 0.3–37.5 kbps. Ideal para redes IoT de área amplia (LPWAN).</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Redes de sensores agrícolas, telemetría de largo alcance, medidores inteligentes de agua/gas, tracking GPS rural.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V</span>
+            <span class="pin-badge">SPI (MISO/MOSI/SCK)</span>
+            <span class="pin-badge">NSS / RST / DIO0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIM800L GSM -->
+      <div class="card comunicacion" data-cat="comunicacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/comunicacion5.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo GSM SIM800L</p>
+          </div>
+          <span class="img-corner">COM-005</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag comunicacion">Comunicación</span>
+            <span class="card-id">#COM-005</span>
+          </div>
+          <h3 class="card-name">Módulo GSM/GPRS SIM800L</h3>
+          <p class="card-desc">Módulo de comunicación celular cuadribanda (850/900/1800/1900 MHz) con soporte para voz, SMS y datos GPRS. Acepta nano-SIM. Permite a Arduino enviar y recibir SMS, hacer llamadas y conectarse a internet por red celular. Requiere fuente estable de 3.7–4.2V y al menos 2A pico.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Alertas por SMS, trackers GPS con reporte celular, sistemas de seguridad remotos, IoT sin WiFi disponible.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.7–4.2V (2A)</span>
+            <span class="pin-badge">TX / RX UART</span>
+            <span class="pin-badge">RST / DTR</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTUADORES -->
+  <div class="section" data-cat="actuador">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Actuadores</h2>
+      <div class="section-line"></div>
+      <span class="section-count">5 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- Servo -->
+      <div class="card actuador" data-cat="actuador">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/actuadores1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Servomotor SG90 / MG996R</p>
+          </div>
+          <span class="img-corner">ACT-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag actuador">Actuador</span>
+            <span class="card-id">#ACT-001</span>
+          </div>
+          <h3 class="card-name">Servomotor SG90 / MG996R</h3>
+          <p class="card-desc">Motor con caja reductora y encoder de posición integrado. Recibe señal PWM y rota a un ángulo preciso (0–180° o continua). El SG90 es de plástico (1.8 kg·cm), el MG996R tiene engranajes metálicos y mayor torque (9.4 kg·cm). Se controla con la librería Servo.h de Arduino.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Brazos robóticos, timones de aeromodelos, cámaras pan-tilt, cerraduras, apertura de válvulas, mecanismos de dirección.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 4.8–7.2V</span>
+            <span class="pin-badge">Signal PWM</span>
+            <span class="pin-badge">GND</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Motor paso a paso -->
+      <div class="card actuador" data-cat="actuador">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/actuadores2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Motor Paso a Paso 28BYJ-48</p>
+          </div>
+          <span class="img-corner">ACT-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag actuador">Actuador</span>
+            <span class="card-id">#ACT-002</span>
+          </div>
+          <h3 class="card-name">Motor Paso a Paso 28BYJ-48 + ULN2003</h3>
+          <p class="card-desc">Motor unipolar de 5 cables con driver ULN2003 incluido. Da 2048 pasos por revolución en modo medio paso (360°/2048 = 0.176° de precisión). Opera a 5V. Ideal para proyectos de bajo torque que requieren posicionamiento preciso sin feedback.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Relojes de agujas, telescopios caseros, impresoras simples, mecanismos de posicionamiento preciso, cortinas automáticas.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">IN1–IN4 digital</span>
+            <span class="pin-badge">Driver ULN2003</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Buzzer -->
+      <div class="card actuador" data-cat="actuador">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/actuadores3.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Buzzer Activo / Pasivo</p>
+          </div>
+          <span class="img-corner">ACT-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag actuador">Actuador</span>
+            <span class="card-id">#ACT-003</span>
+          </div>
+          <h3 class="card-name">Buzzer Activo y Pasivo</h3>
+          <p class="card-desc">Transductor piezoeléctrico que convierte señal eléctrica en sonido. El buzzer activo tiene oscilador interno: solo necesita 5V para sonar a una frecuencia fija. El pasivo necesita señal PWM y puede reproducir diferentes frecuencias y tonos musicales programados con tone().</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Alarmas sonoras, notificaciones de eventos, melodías simples, confirmación de acciones en interfaces, temporizadores.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">Signal digital/PWM</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LED RGB -->
+      <div class="card actuador" data-cat="actuador">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/actuadores4.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>LED RGB / Tira LED WS2812</p>
+          </div>
+          <span class="img-corner">ACT-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag actuador">Actuador</span>
+            <span class="card-id">#ACT-004</span>
+          </div>
+          <h3 class="card-name">LED RGB / Tira NeoPixel WS2812B</h3>
+          <p class="card-desc">LED RGB con ánodo común o cátodo común que combina tres colores (R, G, B) en un solo componente. La tira WS2812B integra el controlador en cada LED y usa un único cable de datos para controlar cientos de LEDs en serie con colores independientes. Compatible con librería FastLED o Adafruit NeoPixel.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Iluminación ambiental dinámica, indicadores de estado con colores, efectos visuales, decoración interactiva, matrices de LED.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">DIN digital (WS2812)</span>
+            <span class="pin-badge">R/G/B PWM (RGB)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bomba de agua -->
+      <div class="card actuador" data-cat="actuador">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/actuadores5.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Mini Bomba de Agua DC</p>
+          </div>
+          <span class="img-corner">ACT-005</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag actuador">Actuador</span>
+            <span class="card-id">#ACT-005</span>
+          </div>
+          <h3 class="card-name">Mini Bomba de Agua Sumergible DC</h3>
+          <p class="card-desc">Bomba peristáltica o centrífuga de 3–6V DC. Caudal de 1.2 a 2 L/min. Es sumergible y puede impulsar agua hasta 40–80 cm de altura. Se controla mediante un transistor o relé conectado a Arduino. No conectar directamente al pin de Arduino (requiere driver).</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Sistemas de riego automático, fuentes decorativas, enfriamiento por agua, acuarios automatizados, dosificadores de líquidos.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3–6V DC</span>
+            <span class="pin-badge">Control via Relé / MOSFET</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- DISPLAYS -->
+  <div class="section" data-cat="display">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Displays y Pantallas</h2>
+      <div class="section-line"></div>
+      <span class="section-count">4 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- LCD 16x2 -->
+      <div class="card display" data-cat="display">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/pantalla1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Display LCD 16×2 I2C</p>
+          </div>
+          <span class="img-corner">DIS-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag display">Display</span>
+            <span class="card-id">#DIS-001</span>
+          </div>
+          <h3 class="card-name">Display LCD 16×2 con I²C</h3>
+          <p class="card-desc">Pantalla de cristal líquido con 2 filas y 16 columnas de caracteres. El módulo I²C (PCF8574) reduce la conexión a solo 2 pines (SDA/SCL) en lugar de los 6+ del LCD directo. Retroiluminación azul o verde ajustable. Contraste ajustable con potenciómetro integrado.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Mostrar lecturas de sensores, menús interactivos, mensajes de estado, datos de temperatura/humedad, contadores, relojes.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">I²C (SDA/SCL)</span>
+            <span class="pin-badge">Dir. I²C: 0x27</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- OLED SSD1306 -->
+      <div class="card display" data-cat="display">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/pantall2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>OLED SSD1306 0.96"</p>
+          </div>
+          <span class="img-corner">DIS-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag display">Display</span>
+            <span class="card-id">#DIS-002</span>
+          </div>
+          <h3 class="card-name">Pantalla OLED SSD1306 0.96"</h3>
+          <p class="card-desc">Display OLED monocromático de 128×64 píxeles. Al ser OLED no necesita retroiluminación: cada píxel emite su propia luz, lo que da contraste perfecto y bajo consumo (máx 40 mA). Opera a 3.3V o 5V. Interfaz I²C o SPI. Compatible con la librería Adafruit SSD1306.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Wearables y proyectos portátiles, menús gráficos, gráficos en tiempo real de sensores, relojes digitales compactos.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3–5V</span>
+            <span class="pin-badge">I²C (SDA/SCL)</span>
+            <span class="pin-badge">128×64 px</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAX7219 Matriz -->
+      <div class="card display" data-cat="display">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/pantalla3.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Matriz LED 8×8 MAX7219</p>
+          </div>
+          <span class="img-corner">DIS-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag display">Display</span>
+            <span class="card-id">#DIS-003</span>
+          </div>
+          <h3 class="card-name">Matriz LED 8×8 con MAX7219</h3>
+          <p class="card-desc">64 LEDs dispuestos en una cuadrícula de 8×8 controlada por el chip MAX7219 mediante SPI. Se pueden encadenar múltiples matrices (hasta 8 o más) usando el mismo bus SPI con pines CS independientes. Compatible con la librería MD_MAX72XX o LedControl.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Paneles de texto desplazante, animaciones pixeladas, juegos estilo Tetris o Snake, marcadores de puntuación, relojes.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 5V</span>
+            <span class="pin-badge">SPI (DIN/CLK/CS)</span>
+            <span class="pin-badge">Encadenable</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TFT ILI9341 -->
+      <div class="card display" data-cat="display">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/pantalla4.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Pantalla TFT ILI9341 2.8"</p>
+          </div>
+          <span class="img-corner">DIS-004</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag display">Display</span>
+            <span class="card-id">#DIS-004</span>
+          </div>
+          <h3 class="card-name">Pantalla TFT ILI9341 2.8" a Color</h3>
+          <p class="card-desc">Display TFT LCD a color de 320×240 píxeles con 65,536 colores (16 bits). Muchas versiones incluyen lector SD y pantalla táctil resistiva (XPT2046). Controlador ILI9341 via SPI. Ideal para interfaces gráficas, imágenes a color y HMI. Requiere adaptador de nivel para Arduino 5V.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Interfaces gráficas de usuario, dashboards de sensores a color, sistemas de navegación simple, reproductores de imágenes.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">VCC 3.3V lógico</span>
+            <span class="pin-badge">SPI alta velocidad</span>
+            <span class="pin-badge">CS / DC / RST / BL</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ALIMENTACIÓN -->
+  <div class="section" data-cat="alimentacion">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Alimentación y Energía</h2>
+      <div class="section-line"></div>
+      <span class="section-count">3 componentes</span>
+    </div>
+    <div class="cards-grid">
+
+      <!-- Step-down LM2596 -->
+      <div class="card alimentacion" data-cat="alimentacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <img src="imagenes/alimentacion1.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Regulador Step-Down LM2596</p>
+          </div>
+          <span class="img-corner">PWR-001</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag alimentacion">Alimentación</span>
+            <span class="card-id">#PWR-001</span>
+          </div>
+          <h3 class="card-name">Regulador Step-Down (Buck) LM2596</h3>
+          <p class="card-desc">Convertidor DC-DC reductor de voltaje (buck) ajustable. Entrada de 4–40V, salida ajustable de 1.25–37V con corriente hasta 3A. Eficiencia del 92%. Mucho más eficiente que los reguladores lineales (LM7805) ya que convierte el exceso de voltaje en corriente en lugar de calor.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Alimentar Arduino desde baterías de 12V, reducir voltaje de fuentes de alimentación, alimentar múltiples voltajes desde una sola fuente.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">IN+ hasta 40V</span>
+            <span class="pin-badge">OUT ajustable</span>
+            <span class="pin-badge">Potenciómetro ajuste</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step-up boost -->
+      <div class="card alimentacion" data-cat="alimentacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/alimentacion2.jpg" alt="Sensor" width="100%" height="auto" style="max-width: 100%; border: none;object-fit: contain;">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Módulo Step-Up Boost MT3608</p>
+          </div>
+          <span class="img-corner">PWR-002</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag alimentacion">Alimentación</span>
+            <span class="card-id">#PWR-002</span>
+          </div>
+          <h3 class="card-name">Módulo Step-Up (Boost) MT3608</h3>
+          <p class="card-desc">Convertidor DC-DC elevador de voltaje. Entrada de 2–24V, salida ajustable de hasta 28V con corriente de hasta 2A. Permite elevar el voltaje de una batería de litio (3.7V) a 5V o 12V. La versión USB fija la salida a 5V y tiene conector USB para cargar dispositivos.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Proyectos portátiles con batería de litio, banco de energía DIY, alimentar dispositivos de 5V desde 3.7V, energía solar.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">IN+ 2–24V</span>
+            <span class="pin-badge">OUT ajustable</span>
+            <span class="pin-badge">Eficiencia 93%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel solar -->
+      <div class="card alimentacion" data-cat="alimentacion">
+        <div class="card-img-area">
+          <div class="img-placeholder">
+            <div class="img-placeholder-icon">
+              <img src="imagenes/alimentacion3.jpg">
+            </div>
+            <p class="img-placeholder-text">AGREGAR IMAGEN<br>Panel Solar 5V / 6V</p>
+          </div>
+          <span class="img-corner">PWR-003</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span class="card-tag alimentacion">Alimentación</span>
+            <span class="card-id">#PWR-003</span>
+          </div>
+          <h3 class="card-name">Panel Solar + Módulo MPPT / CN3791</h3>
+          <p class="card-desc">Celda fotovoltaica que convierte luz solar en electricidad. Combinado con un módulo de carga solar (CN3791 o similar con MPPT), permite cargar baterías Li-Po de forma autónoma. Los módulos MPPT maximizan la extracción de energía adaptándose a las condiciones de luz.</p>
+          <div class="card-use">
+            <p class="card-use-label">// Para qué sirve</p>
+            <p class="card-use-text">Estaciones de sensores autónomas en campo, medidores de agua remotos, proyectos IoT solares, jardines inteligentes sin electricidad.</p>
+          </div>
+          <div class="card-pins">
+            <span class="pin-badge">Panel 5–6V salida</span>
+            <span class="pin-badge">Módulo carga MPPT</span>
+            <span class="pin-badge">BAT 3.7V Li-Po</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span class="footer-text">ARDUINO HARDWARE REF <span>//</span> GUÍA DE COMPONENTES</span>
+  <span class="footer-text"><span>35+</span> COMPONENTES DOCUMENTADOS</span>
+</footer>
+
+<script>
+  function filterCards(cat, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    document.querySelectorAll('.section').forEach(section => {
+      if (cat === 'all') {
+        section.style.display = 'block';
+      } else {
+        const sectionCat = section.getAttribute('data-cat');
+        section.style.display = sectionCat === cat ? 'block' : 'none';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

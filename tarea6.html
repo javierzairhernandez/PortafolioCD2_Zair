@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python — Guía Fundamental</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --surface2: #1a1e28;
+    --border: #252a38;
+    --py-blue: #306998;
+    --py-yellow: #ffd43b;
+    --py-yellow-dim: #c9a61a;
+    --accent: #4fc3f7;
+    --accent2: #81c784;
+    --text: #e8eaf0;
+    --text-muted: #7a8099;
+    --code-bg: #0a0c12;
+    --keyword: #ff79c6;
+    --string: #f1fa8c;
+    --comment: #6272a4;
+    --func: #50fa7b;
+    --number: #bd93f9;
+    --builtin: #8be9fd;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ===== BACK BUTTON ===== */
+  .back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 212, 59, 0.12);
+    color: var(--py-yellow);
+    border: 1px solid rgba(255, 212, 59, 0.35);
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(12px);
+  }
+  .back-btn:hover {
+    background: rgba(255, 212, 59, 0.22);
+    border-color: var(--py-yellow);
+    transform: translateX(-3px);
+    box-shadow: 0 0 20px rgba(255, 212, 59, 0.2);
+  }
+  .back-btn svg { width: 14px; height: 14px; }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 2rem 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 0%, rgba(48, 105, 152, 0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 80% 70%, rgba(255, 212, 59, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-snake {
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255,212,59,0.4));
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255, 212, 59, 0.1);
+    border: 1px solid rgba(255, 212, 59, 0.3);
+    color: var(--py-yellow);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    padding: 6px 16px;
+    border-radius: 40px;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--py-yellow) 0%, #ff9800 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-desc {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-stat {
+    text-align: center;
+  }
+  .hero-stat .num {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--py-yellow);
+    display: block;
+  }
+  .hero-stat .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* ===== NAV DOTS ===== */
+  .toc {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+  }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .toc a:hover {
+    color: var(--py-yellow);
+    border-color: rgba(255,212,59,0.3);
+    background: rgba(255,212,59,0.05);
+  }
+
+  /* ===== MAIN CONTENT ===== */
+  .content {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 2rem 6rem;
+  }
+
+  /* ===== SECTION ===== */
+  .section {
+    padding: 5rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.6s forwards;
+  }
+  .section:nth-child(1) { animation-delay: 0.1s; }
+  .section:nth-child(2) { animation-delay: 0.15s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.25s; }
+  .section:nth-child(5) { animation-delay: 0.3s; }
+  .section:nth-child(6) { animation-delay: 0.35s; }
+  .section:nth-child(7) { animation-delay: 0.4s; }
+  .section:nth-child(8) { animation-delay: 0.45s; }
+  .section:nth-child(9) { animation-delay: 0.5s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 0.6rem;
+  }
+  .section-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--py-yellow);
+    opacity: 0.7;
+    letter-spacing: 0.12em;
+  }
+  .section-line {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(to right, rgba(255,212,59,0.3), transparent);
+  }
+
+  .section h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section h2 .icon { font-size: 1.8rem; }
+
+  .section h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 2rem 0 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section h3::before {
+    content: '//';
+    font-family: 'Space Mono', monospace;
+    color: var(--py-yellow);
+    font-size: 0.9rem;
+    opacity: 0.6;
+  }
+
+  .section p {
+    color: #c5cad8;
+    font-size: 1rem;
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+
+  /* ===== INFO CARDS ===== */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.4rem;
+    transition: border-color 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--py-blue), var(--py-yellow));
+  }
+  .card:hover {
+    border-color: rgba(255,212,59,0.35);
+    transform: translateY(-3px);
+  }
+  .card .card-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+  .card .card-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+  .card .card-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ===== CODE BLOCKS ===== */
+  .code-wrap {
+    margin: 1.8rem 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+  }
+  .code-header {
+    background: var(--surface2);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dots { display: flex; gap: 6px; }
+  .code-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-filename {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .code-lang {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    background: rgba(255,212,59,0.1);
+    color: var(--py-yellow);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    padding: 1.5rem 1.8rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+  code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  /* Syntax highlight classes */
+  .kw { color: var(--keyword); font-weight: 500; }
+  .st { color: var(--string); }
+  .cm { color: var(--comment); font-style: italic; }
+  .fn { color: var(--func); }
+  .nb { color: var(--number); }
+  .bi { color: var(--builtin); }
+  .op { color: #ff79c6; }
+  .va { color: var(--text); }
+  .cl { color: #8be9fd; font-weight: 600; }
+
+  /* ===== OUTPUT BLOCK ===== */
+  .output-wrap {
+    margin: -1px 0 1.8rem;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-top: none;
+  }
+  .output-header {
+    background: rgba(80, 250, 123, 0.07);
+    padding: 8px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(80,250,123,0.15);
+    text-transform: uppercase;
+  }
+  .output-body {
+    background: #080a0e;
+    padding: 1rem 1.8rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: var(--accent2);
+    line-height: 1.7;
+  }
+
+  /* ===== CALLOUT ===== */
+  .callout {
+    border-left: 3px solid var(--py-yellow);
+    background: rgba(255, 212, 59, 0.06);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.4rem;
+    margin: 1.5rem 0;
+    font-size: 0.93rem;
+    color: #d4b84a;
+  }
+  .callout strong { color: var(--py-yellow); }
+
+  .callout-blue {
+    border-left-color: var(--accent);
+    background: rgba(79, 195, 247, 0.06);
+    color: #81c8e8;
+  }
+  .callout-blue strong { color: var(--accent); }
+
+  .callout-green {
+    border-left-color: var(--accent2);
+    background: rgba(129, 199, 132, 0.06);
+    color: #9eca9e;
+  }
+  .callout-green strong { color: var(--accent2); }
+
+  /* ===== TABLE ===== */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.8rem 0;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+  thead tr {
+    background: var(--surface2);
+  }
+  th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--py-yellow);
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(37,42,56,0.7);
+    color: #c5cad8;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.025); }
+  td.hl { color: var(--py-yellow); }
+
+  /* ===== CONCEPT CHIPS ===== */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.2rem 0;
+  }
+  .chip {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    transition: all 0.2s;
+  }
+  .chip:hover {
+    border-color: rgba(255,212,59,0.4);
+    color: var(--py-yellow);
+    background: rgba(255,212,59,0.05);
+  }
+
+  /* ===== ILLUSTRATION ===== */
+  .illustration {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: center;
+    overflow: hidden;
+  }
+  .illustration svg { max-width: 100%; height: auto; }
+  .illus-caption {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.06em;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+  footer span { color: var(--py-yellow); }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--py-blue); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .hero-stats { gap: 1.5rem; }
+    .toc { display: none; }
+    .cards { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BACK BUTTON -->
+<a class="back-btn" href="index.html">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="15 18 9 12 15 6"></polyline>
+  </svg>
+  Volver al Portafolio
+</a>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-snake">🐍</div>
+  <div class="hero-badge">Guía Completa de Programación</div>
+  <h1>Fundamentos de<br><span class="highlight">Python</span></h1>
+  <p class="hero-desc">
+    Todo lo que necesitas para dominar el lenguaje más popular del mundo. Desde variables hasta programación orientada a objetos.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="num">9</span>
+      <span class="label">Temas</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">30+</span>
+      <span class="label">Ejemplos</span>
+    </div>
+    <div class="hero-stat">
+      <span class="num">3.x</span>
+      <span class="label">Versión</span>
+    </div>
+  </div>
+</section>
+
+<!-- NAVIGATION -->
+<nav class="toc">
+  <a href="#intro">01 · Introducción</a>
+  <a href="#variables">02 · Variables</a>
+  <a href="#estructuras">03 · Estructuras de Control</a>
+  <a href="#funciones">04 · Funciones</a>
+  <a href="#listas">05 · Listas y Colecciones</a>
+  <a href="#strings">06 · Cadenas</a>
+  <a href="#oop">07 · POO</a>
+  <a href="#modulos">08 · Módulos</a>
+  <a href="#errores">09 · Manejo de Errores</a>
+</nav>
+
+<!-- CONTENT -->
+<main class="content">
+
+  <!-- ===== 01 INTRODUCCIÓN ===== -->
+  <section class="section" id="intro">
+    <div class="section-label">
+      <span class="section-num">01 // INTRODUCCIÓN</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">🐍</span> ¿Qué es Python?</h2>
+    <p>Python es un lenguaje de programación de alto nivel, interpretado y de propósito general creado por <strong>Guido van Rossum</strong> y publicado en 1991. Su filosofía de diseño enfatiza la legibilidad del código y permite a los programadores expresar conceptos en menos líneas que en otros lenguajes.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Legible</div>
+        <div class="card-desc">Sintaxis clara que se parece al inglés natural. Fácil de aprender y mantener.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Versátil</div>
+        <div class="card-desc">Web, IA, ciencia de datos, automatización, scripting y mucho más.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <div class="card-title">Comunidad</div>
+        <div class="card-desc">Una de las comunidades más grandes del mundo. Miles de librerías disponibles.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔓</div>
+        <div class="card-title">Open Source</div>
+        <div class="card-desc">Completamente libre y gratuito para cualquier uso comercial o personal.</div>
+      </div>
+    </div>
+
+    <!-- Python Logo SVG Illustration -->
+    <div class="illustration">
+      <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" width="500" height="200">
+        <!-- Background decoration -->
+        <defs>
+          <linearGradient id="pyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#306998"/>
+            <stop offset="100%" style="stop-color:#1a4a70"/>
+          </linearGradient>
+          <linearGradient id="pyYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd43b"/>
+            <stop offset="100%" style="stop-color:#c9a61a"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Python logo simplified -->
+        <!-- Blue snake top -->
+        <path d="M175 40 C175 25 185 20 200 20 L240 20 C255 20 260 25 260 40 L260 75 C260 90 250 95 235 95 L200 95 L200 105 L265 105 L265 120 C265 135 255 140 240 140 L200 140 C185 140 175 135 175 120 L175 85 C175 70 185 65 200 65 L235 65 L235 55 L175 55 Z" fill="url(#pyBlue)" rx="8"/>
+        <!-- Yellow snake bottom -->
+        <path d="M265 105 C265 90 255 85 240 85 L200 85 L200 75 L135 75 L135 60 C135 45 145 40 160 40 L200 40 C215 40 225 45 225 60 L225 95 C225 110 215 115 200 115 L165 115 L165 125 L265 125 Z" fill="url(#pyYellow)" rx="8"/>
+
+        <!-- Blue eye -->
+        <circle cx="240" cy="40" r="5" fill="white"/>
+        <circle cx="241" cy="40" r="2.5" fill="#1a3a5c"/>
+
+        <!-- Yellow eye -->
+        <circle cx="165" cy="120" r="5" fill="white"/>
+        <circle cx="166" cy="120" r="2.5" fill="#8b6914"/>
+
+        <!-- Text -->
+        <text x="310" y="85" font-family="Syne, sans-serif" font-weight="800" font-size="42" fill="#e8eaf0" letter-spacing="-1">Python</text>
+        <text x="310" y="115" font-family="Space Mono, monospace" font-size="13" fill="#7a8099" letter-spacing="2">v3.x · Interpretado · Dinámico</text>
+        <text x="310" y="140" font-family="Space Mono, monospace" font-size="11" fill="#ffd43b" opacity="0.7">>>> simple is better than complex</text>
+      </svg>
+      <div class="illus-caption">Logo oficial de Python — Dos serpientes entrelazadas azul y amarilla</div>
+    </div>
+
+    <h3>Tu primer programa</h3>
+    <p>La tradición de toda guía de programación: el famoso "¡Hola, Mundo!"</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">hola_mundo.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Mi primer programa en Python</span>
+<span class="fn">print</span>(<span class="st">"¡Hola, Mundo!"</span>)
+<span class="fn">print</span>(<span class="st">"Bienvenido a Python 🐍"</span>)</code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">¡Hola, Mundo!<br>Bienvenido a Python 🐍</div>
+    </div>
+
+    <div class="callout">
+      <strong>💡 Zen de Python:</strong> "La legibilidad cuenta. Los casos especiales no son suficientemente especiales como para romper las reglas. Lo simple es mejor que lo complejo."
+    </div>
+  </section>
+
+  <!-- ===== 02 VARIABLES ===== -->
+  <section class="section" id="variables">
+    <div class="section-label">
+      <span class="section-num">02 // VARIABLES Y TIPOS DE DATOS</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">📦</span> Variables y Tipos de Datos</h2>
+    <p>En Python, las variables son contenedores que almacenan valores. No es necesario declarar el tipo, Python lo infiere automáticamente (tipado dinámico).</p>
+
+    <!-- Data Types Illustration -->
+    <div class="illustration">
+      <svg viewBox="0 0 600 170" xmlns="http://www.w3.org/2000/svg" width="600" height="170">
+        <defs>
+          <linearGradient id="g1" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#4fc3f7;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#4fc3f7;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ffd43b;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#ffd43b;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="g3" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#81c784;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#81c784;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="g4" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff79c6;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#ff79c6;stop-opacity:0.05"/>
+          </linearGradient>
+          <linearGradient id="g5" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#bd93f9;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#bd93f9;stop-opacity:0.05"/>
+          </linearGradient>
+        </defs>
+
+        <!-- int -->
+        <rect x="10" y="20" width="100" height="110" rx="10" fill="url(#g1)" stroke="#4fc3f7" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="60" y="50" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#4fc3f7" opacity="0.8">int</text>
+        <text x="60" y="80" text-anchor="middle" font-family="Fira Code" font-size="22" fill="#4fc3f7" font-weight="600">42</text>
+        <text x="60" y="118" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#4fc3f7" opacity="0.5">entero</text>
+
+        <!-- float -->
+        <rect x="120" y="20" width="100" height="110" rx="10" fill="url(#g2)" stroke="#ffd43b" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="170" y="50" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#ffd43b" opacity="0.8">float</text>
+        <text x="170" y="80" text-anchor="middle" font-family="Fira Code" font-size="19" fill="#ffd43b" font-weight="600">3.14</text>
+        <text x="170" y="118" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ffd43b" opacity="0.5">decimal</text>
+
+        <!-- str -->
+        <rect x="230" y="20" width="100" height="110" rx="10" fill="url(#g3)" stroke="#81c784" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="280" y="50" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#81c784" opacity="0.8">str</text>
+        <text x="280" y="78" text-anchor="middle" font-family="Fira Code" font-size="16" fill="#81c784" font-weight="600">"hola"</text>
+        <text x="280" y="118" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#81c784" opacity="0.5">cadena</text>
+
+        <!-- bool -->
+        <rect x="340" y="20" width="100" height="110" rx="10" fill="url(#g4)" stroke="#ff79c6" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="390" y="50" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#ff79c6" opacity="0.8">bool</text>
+        <text x="390" y="78" text-anchor="middle" font-family="Fira Code" font-size="16" fill="#ff79c6" font-weight="600">True</text>
+        <text x="390" y="118" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ff79c6" opacity="0.5">booleano</text>
+
+        <!-- NoneType -->
+        <rect x="450" y="20" width="130" height="110" rx="10" fill="url(#g5)" stroke="#bd93f9" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="515" y="50" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#bd93f9" opacity="0.8">NoneType</text>
+        <text x="515" y="78" text-anchor="middle" font-family="Fira Code" font-size="16" fill="#bd93f9" font-weight="600">None</text>
+        <text x="515" y="118" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#bd93f9" opacity="0.5">nulo/vacío</text>
+      </svg>
+      <div class="illus-caption">Tipos de datos primitivos en Python</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">variables.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Tipos básicos de datos</span>
+<span class="va">nombre</span>   <span class="op">=</span> <span class="st">"Ana García"</span>      <span class="cm"># str  — cadena de texto</span>
+<span class="va">edad</span>     <span class="op">=</span> <span class="nb">25</span>               <span class="cm"># int  — número entero</span>
+<span class="va">altura</span>   <span class="op">=</span> <span class="nb">1.68</span>             <span class="cm"># float — número decimal</span>
+<span class="va">activo</span>   <span class="op">=</span> <span class="kw">True</span>             <span class="cm"># bool — verdadero/falso</span>
+<span class="va">dato</span>     <span class="op">=</span> <span class="kw">None</span>             <span class="cm"># NoneType — sin valor</span>
+
+<span class="cm"># Verificar el tipo con type()</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="va">nombre</span>))   <span class="cm"># &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(<span class="va">edad</span>))     <span class="cm"># &lt;class 'int'&gt;</span>
+
+<span class="cm"># Múltiple asignación en una línea</span>
+<span class="va">x</span>, <span class="va">y</span>, <span class="va">z</span> <span class="op">=</span> <span class="nb">10</span>, <span class="nb">20</span>, <span class="nb">30</span>
+
+<span class="cm"># Conversión de tipos (casting)</span>
+<span class="va">numero_texto</span> <span class="op">=</span> <span class="st">"42"</span>
+<span class="va">numero_int</span>   <span class="op">=</span> <span class="bi">int</span>(<span class="va">numero_texto</span>)   <span class="cm"># "42" → 42</span>
+<span class="va">numero_float</span> <span class="op">=</span> <span class="bi">float</span>(<span class="nb">99</span>)           <span class="cm"># 99 → 99.0</span>
+<span class="va">texto_num</span>    <span class="op">=</span> <span class="bi">str</span>(<span class="nb">3.14</span>)           <span class="cm"># 3.14 → "3.14"</span></code></pre>
+    </div>
+
+    <h3>Operadores</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tipo</th><th>Operador</th><th>Ejemplo</th><th>Resultado</th></tr></thead>
+        <tbody>
+          <tr><td>Suma</td><td class="hl">+</td><td>5 + 3</td><td>8</td></tr>
+          <tr><td>Resta</td><td class="hl">-</td><td>10 - 4</td><td>6</td></tr>
+          <tr><td>Multiplicación</td><td class="hl">*</td><td>3 * 4</td><td>12</td></tr>
+          <tr><td>División</td><td class="hl">/</td><td>10 / 3</td><td>3.333…</td></tr>
+          <tr><td>División entera</td><td class="hl">//</td><td>10 // 3</td><td>3</td></tr>
+          <tr><td>Módulo/Resto</td><td class="hl">%</td><td>10 % 3</td><td>1</td></tr>
+          <tr><td>Potencia</td><td class="hl">**</td><td>2 ** 8</td><td>256</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ===== 03 ESTRUCTURAS DE CONTROL ===== -->
+  <section class="section" id="estructuras">
+    <div class="section-label">
+      <span class="section-num">03 // ESTRUCTURAS DE CONTROL</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">🔀</span> Estructuras de Control</h2>
+    <p>Las estructuras de control dirigen el flujo de ejecución del programa según condiciones y repeticiones.</p>
+
+    <h3>Condicionales — if / elif / else</h3>
+    <p>Python usa la <strong>indentación</strong> (espacios) para delimitar bloques, no llaves. Esto obliga a escribir código limpio.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">condicionales.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="va">edad</span> <span class="op">=</span> <span class="nb">20</span>
+
+<span class="kw">if</span> <span class="va">edad</span> <span class="op">&gt;=</span> <span class="nb">18</span>:
+    <span class="fn">print</span>(<span class="st">"Eres mayor de edad"</span>)
+<span class="kw">elif</span> <span class="va">edad</span> <span class="op">&gt;=</span> <span class="nb">13</span>:
+    <span class="fn">print</span>(<span class="st">"Eres adolescente"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Eres un niño"</span>)
+
+<span class="cm"># Operadores de comparación</span>
+<span class="cm"># ==  igual a        !=  diferente de</span>
+<span class="cm"># &gt;   mayor que       &lt;   menor que</span>
+<span class="cm"># &gt;=  mayor o igual   &lt;=  menor o igual</span>
+
+<span class="cm"># Operadores lógicos</span>
+<span class="va">x</span> <span class="op">=</span> <span class="nb">15</span>
+<span class="kw">if</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nb">10</span> <span class="kw">and</span> <span class="va">x</span> <span class="op">&lt;</span> <span class="nb">20</span>:
+    <span class="fn">print</span>(<span class="st">"x está entre 10 y 20"</span>)
+
+<span class="cm"># Condicional en una línea (ternario)</span>
+<span class="va">estado</span> <span class="op">=</span> <span class="st">"adulto"</span> <span class="kw">if</span> <span class="va">edad</span> <span class="op">&gt;=</span> <span class="nb">18</span> <span class="kw">else</span> <span class="st">"menor"</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">Eres mayor de edad<br>x está entre 10 y 20</div>
+    </div>
+
+    <h3>Bucle for</h3>
+    <p>Itera sobre cualquier secuencia: listas, rangos, cadenas, diccionarios, etc.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">bucle_for.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Iterar sobre un rango de números</span>
+<span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nb">1</span>, <span class="nb">6</span>):
+    <span class="fn">print</span>(<span class="st">f"Número: </span><span class="va">{i}</span><span class="st">"</span>)
+
+<span class="cm"># Iterar sobre una lista</span>
+<span class="va">frutas</span> <span class="op">=</span> [<span class="st">"manzana"</span>, <span class="st">"naranja"</span>, <span class="st">"mango"</span>]
+<span class="kw">for</span> <span class="va">fruta</span> <span class="kw">in</span> <span class="va">frutas</span>:
+    <span class="fn">print</span>(<span class="st">f"Fruta: </span><span class="va">{fruta}</span><span class="st">"</span>)
+
+<span class="cm"># enumerate — índice + valor</span>
+<span class="kw">for</span> <span class="va">i</span>, <span class="va">fruta</span> <span class="kw">in</span> <span class="bi">enumerate</span>(<span class="va">frutas</span>):
+    <span class="fn">print</span>(<span class="st">f"</span><span class="va">{i}</span><span class="st">. </span><span class="va">{fruta}</span><span class="st">"</span>)
+
+<span class="cm"># Comprensión de lista (list comprehension)</span>
+<span class="va">cuadrados</span> <span class="op">=</span> [<span class="va">x</span><span class="op">**</span><span class="nb">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nb">1</span>, <span class="nb">6</span>)]
+<span class="fn">print</span>(<span class="va">cuadrados</span>)  <span class="cm"># [1, 4, 9, 16, 25]</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">Número: 1 ... Número: 5<br>Fruta: manzana — naranja — mango<br>0. manzana  1. naranja  2. mango<br>[1, 4, 9, 16, 25]</div>
+    </div>
+
+    <h3>Bucle while</h3>
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">bucle_while.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="va">contador</span> <span class="op">=</span> <span class="nb">0</span>
+
+<span class="kw">while</span> <span class="va">contador</span> <span class="op">&lt;</span> <span class="nb">5</span>:
+    <span class="fn">print</span>(<span class="st">f"Contador: </span><span class="va">{contador}</span><span class="st">"</span>)
+    <span class="va">contador</span> <span class="op">+=</span> <span class="nb">1</span>   <span class="cm"># equivale a contador = contador + 1</span>
+
+<span class="cm"># break — salir del bucle</span>
+<span class="cm"># continue — saltar a la siguiente iteración</span>
+<span class="kw">for</span> <span class="va">n</span> <span class="kw">in</span> <span class="bi">range</span>(<span class="nb">10</span>):
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">==</span> <span class="nb">3</span>: <span class="kw">continue</span>   <span class="cm"># salta el 3</span>
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">==</span> <span class="nb">7</span>: <span class="kw">break</span>     <span class="cm"># para en el 7</span>
+    <span class="fn">print</span>(<span class="va">n</span>, <span class="va">end</span><span class="op">=</span><span class="st">" "</span>)    <span class="cm"># 0 1 2 4 5 6</span></code></pre>
+    </div>
+
+    <div class="callout callout-blue">
+      <strong>⚠️ Importante:</strong> Python usa <strong>indentación</strong> (4 espacios o 1 tab) para definir bloques de código. Un error de indentación es un error de sintaxis.
+    </div>
+  </section>
+
+  <!-- ===== 04 FUNCIONES ===== -->
+  <section class="section" id="funciones">
+    <div class="section-label">
+      <span class="section-num">04 // FUNCIONES</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">⚙️</span> Funciones</h2>
+    <p>Las funciones son bloques de código reutilizables que realizan una tarea específica. Se definen con la palabra clave <code>def</code>.</p>
+
+    <!-- Function diagram -->
+    <div class="illustration">
+      <svg viewBox="0 0 560 120" xmlns="http://www.w3.org/2000/svg" width="560" height="120">
+        <!-- Input -->
+        <rect x="10" y="35" width="120" height="50" rx="8" fill="rgba(79,195,247,0.1)" stroke="#4fc3f7" stroke-width="1.5" stroke-opacity="0.6"/>
+        <text x="70" y="57" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#4fc3f7" opacity="0.7">ENTRADA</text>
+        <text x="70" y="75" text-anchor="middle" font-family="Fira Code" font-size="13" fill="#4fc3f7">argumentos</text>
+
+        <!-- Arrow -->
+        <line x1="130" y1="60" x2="175" y2="60" stroke="#7a8099" stroke-width="1.5"/>
+        <polygon points="175,54 185,60 175,66" fill="#7a8099"/>
+
+        <!-- Function box -->
+        <rect x="185" y="15" width="190" height="90" rx="12" fill="rgba(255,212,59,0.08)" stroke="#ffd43b" stroke-width="1.5" stroke-opacity="0.7"/>
+        <text x="280" y="45" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#ffd43b" opacity="0.7">FUNCIÓN</text>
+        <text x="280" y="68" text-anchor="middle" font-family="Fira Code" font-size="15" fill="#ffd43b">def mi_func()</text>
+        <text x="280" y="88" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#ffd43b" opacity="0.5">lógica / procesamiento</text>
+
+        <!-- Arrow -->
+        <line x1="375" y1="60" x2="420" y2="60" stroke="#7a8099" stroke-width="1.5"/>
+        <polygon points="420,54 430,60 420,66" fill="#7a8099"/>
+
+        <!-- Output -->
+        <rect x="430" y="35" width="120" height="50" rx="8" fill="rgba(129,199,132,0.1)" stroke="#81c784" stroke-width="1.5" stroke-opacity="0.6"/>
+        <text x="490" y="57" text-anchor="middle" font-family="Space Mono" font-size="10" fill="#81c784" opacity="0.7">SALIDA</text>
+        <text x="490" y="75" text-anchor="middle" font-family="Fira Code" font-size="13" fill="#81c784">return valor</text>
+      </svg>
+      <div class="illus-caption">Flujo de una función: entrada → procesamiento → salida</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">funciones.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Función básica</span>
+<span class="kw">def</span> <span class="fn">saludar</span>(<span class="va">nombre</span>):
+    <span class="kw">return</span> <span class="st">f"¡Hola, </span><span class="va">{nombre}</span><span class="st">!"</span>
+
+<span class="fn">print</span>(<span class="fn">saludar</span>(<span class="st">"María"</span>))   <span class="cm"># ¡Hola, María!</span>
+
+<span class="cm"># Parámetros con valor por defecto</span>
+<span class="kw">def</span> <span class="fn">potencia</span>(<span class="va">base</span>, <span class="va">exponente</span><span class="op">=</span><span class="nb">2</span>):
+    <span class="kw">return</span> <span class="va">base</span> <span class="op">**</span> <span class="va">exponente</span>
+
+<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="nb">4</span>))       <span class="cm"># 16  (usa exp=2 por defecto)</span>
+<span class="fn">print</span>(<span class="fn">potencia</span>(<span class="nb">2</span>, <span class="nb">10</span>))   <span class="cm"># 1024</span>
+
+<span class="cm"># *args — número variable de argumentos</span>
+<span class="kw">def</span> <span class="fn">sumar</span>(<span class="op">*</span><span class="va">numeros</span>):
+    <span class="kw">return</span> <span class="bi">sum</span>(<span class="va">numeros</span>)
+
+<span class="fn">print</span>(<span class="fn">sumar</span>(<span class="nb">1</span>, <span class="nb">2</span>, <span class="nb">3</span>, <span class="nb">4</span>, <span class="nb">5</span>))  <span class="cm"># 15</span>
+
+<span class="cm"># **kwargs — argumentos clave-valor</span>
+<span class="kw">def</span> <span class="fn">perfil</span>(<span class="op">**</span><span class="va">datos</span>):
+    <span class="kw">for</span> <span class="va">clave</span>, <span class="va">valor</span> <span class="kw">in</span> <span class="va">datos</span>.<span class="fn">items</span>():
+        <span class="fn">print</span>(<span class="st">f"</span><span class="va">{clave}</span><span class="st">: </span><span class="va">{valor}</span><span class="st">"</span>)
+
+<span class="fn">perfil</span>(<span class="va">nombre</span><span class="op">=</span><span class="st">"Ana"</span>, <span class="va">edad</span><span class="op">=</span><span class="nb">25</span>, <span class="va">ciudad</span><span class="op">=</span><span class="st">"CDMX"</span>)
+
+<span class="cm"># Lambda — función anónima de una línea</span>
+<span class="va">doble</span> <span class="op">=</span> <span class="kw">lambda</span> <span class="va">x</span>: <span class="va">x</span> <span class="op">*</span> <span class="nb">2</span>
+<span class="fn">print</span>(<span class="fn">doble</span>(<span class="nb">7</span>))   <span class="cm"># 14</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">¡Hola, María!<br>16<br>1024<br>15<br>nombre: Ana | edad: 25 | ciudad: CDMX<br>14</div>
+    </div>
+  </section>
+
+  <!-- ===== 05 LISTAS Y COLECCIONES ===== -->
+  <section class="section" id="listas">
+    <div class="section-label">
+      <span class="section-num">05 // LISTAS Y COLECCIONES</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">📚</span> Listas y Colecciones</h2>
+    <p>Python ofrece cuatro estructuras de datos integradas esenciales, cada una con propósito distinto.</p>
+
+    <div class="chips">
+      <span class="chip">list [ ]</span>
+      <span class="chip">tuple ( )</span>
+      <span class="chip">dict { : }</span>
+      <span class="chip">set { }</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tipo</th><th>Mutable</th><th>Ordenado</th><th>Duplicados</th><th>Uso principal</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">list</td><td>✅ Sí</td><td>✅ Sí</td><td>✅ Sí</td><td>Colección de ítems general</td></tr>
+          <tr><td class="hl">tuple</td><td>❌ No</td><td>✅ Sí</td><td>✅ Sí</td><td>Datos fijos, constantes</td></tr>
+          <tr><td class="hl">dict</td><td>✅ Sí</td><td>✅ Sí</td><td>claves No</td><td>Pares clave-valor</td></tr>
+          <tr><td class="hl">set</td><td>✅ Sí</td><td>❌ No</td><td>❌ No</td><td>Colección sin duplicados</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">colecciones.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># ── LIST ─────────────────────────────</span>
+<span class="va">frutas</span> <span class="op">=</span> [<span class="st">"manzana"</span>, <span class="st">"banana"</span>, <span class="st">"cereza"</span>]
+<span class="va">frutas</span>.<span class="fn">append</span>(<span class="st">"mango"</span>)      <span class="cm"># agrega al final</span>
+<span class="va">frutas</span>.<span class="fn">insert</span>(<span class="nb">1</span>, <span class="st">"uva"</span>)     <span class="cm"># inserta en posición</span>
+<span class="va">frutas</span>.<span class="fn">remove</span>(<span class="st">"banana"</span>)    <span class="cm"># elimina por valor</span>
+<span class="fn">print</span>(<span class="va">frutas</span>[<span class="nb">0</span>])            <span class="cm"># manzana (índice 0)</span>
+<span class="fn">print</span>(<span class="va">frutas</span>[<span class="op">-</span><span class="nb">1</span>])           <span class="cm"># mango   (último)</span>
+<span class="fn">print</span>(<span class="va">frutas</span>[<span class="nb">1</span>:<span class="nb">3</span>])          <span class="cm"># slicing → ['uva','cereza']</span>
+
+<span class="cm"># ── TUPLE ────────────────────────────</span>
+<span class="va">coordenadas</span> <span class="op">=</span> (<span class="nb">19.43</span>, <span class="op">-</span><span class="nb">99.13</span>)  <span class="cm"># no se puede modificar</span>
+<span class="va">lat</span>, <span class="va">lon</span> <span class="op">=</span> <span class="va">coordenadas</span>          <span class="cm"># desempaquetado</span>
+
+<span class="cm"># ── DICT ─────────────────────────────</span>
+<span class="va">persona</span> <span class="op">=</span> {
+    <span class="st">"nombre"</span>: <span class="st">"Luis"</span>,
+    <span class="st">"edad"</span>:   <span class="nb">30</span>,
+    <span class="st">"ciudad"</span>: <span class="st">"Guadalajara"</span>
+}
+<span class="fn">print</span>(<span class="va">persona</span>[<span class="st">"nombre"</span>])         <span class="cm"># Luis</span>
+<span class="va">persona</span>[<span class="st">"email"</span>] <span class="op">=</span> <span class="st">"l@mail.com"</span> <span class="cm"># agregar clave</span>
+<span class="fn">print</span>(<span class="va">persona</span>.<span class="fn">get</span>(<span class="st">"telefono"</span>, <span class="st">"N/A"</span>))  <span class="cm"># N/A si no existe</span>
+
+<span class="cm"># ── SET ──────────────────────────────</span>
+<span class="va">colores</span> <span class="op">=</span> {<span class="st">"rojo"</span>, <span class="st">"azul"</span>, <span class="st">"verde"</span>, <span class="st">"rojo"</span>}
+<span class="fn">print</span>(<span class="va">colores</span>)  <span class="cm"># {'rojo', 'azul', 'verde'} — sin duplicados</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">manzana<br>mango<br>['uva', 'cereza']<br>Luis<br>N/A<br>{'rojo', 'azul', 'verde'}</div>
+    </div>
+  </section>
+
+  <!-- ===== 06 STRINGS ===== -->
+  <section class="section" id="strings">
+    <div class="section-label">
+      <span class="section-num">06 // CADENAS DE TEXTO</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">💬</span> Cadenas de Texto (Strings)</h2>
+    <p>Las cadenas son uno de los tipos más usados en Python. Ofrecen una riqueza de métodos para transformar, buscar y formatear texto.</p>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">strings.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="va">texto</span> <span class="op">=</span> <span class="st">"  Hola, Mundo Python  "</span>
+
+<span class="cm"># Métodos de transformación</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">upper</span>())       <span class="cm"># HOLA, MUNDO PYTHON</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">lower</span>())       <span class="cm"># hola, mundo python</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">strip</span>())       <span class="cm"># "Hola, Mundo Python"</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">replace</span>(<span class="st">"Mundo"</span>, <span class="st">"Universo"</span>))
+
+<span class="cm"># Búsqueda</span>
+<span class="fn">print</span>(<span class="st">"Python"</span> <span class="kw">in</span> <span class="va">texto</span>)   <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">find</span>(<span class="st">"Mundo"</span>)) <span class="cm"># índice donde empieza</span>
+<span class="fn">print</span>(<span class="va">texto</span>.<span class="fn">count</span>(<span class="st">"o"</span>))    <span class="cm"># cuántas veces aparece</span>
+
+<span class="cm"># Split y join</span>
+<span class="va">palabras</span> <span class="op">=</span> <span class="st">"uno,dos,tres"</span>.<span class="fn">split</span>(<span class="st">","</span>)
+<span class="fn">print</span>(<span class="va">palabras</span>)              <span class="cm"># ['uno', 'dos', 'tres']</span>
+<span class="fn">print</span>(<span class="st">" - "</span>.<span class="fn">join</span>(<span class="va">palabras</span>))  <span class="cm"># uno - dos - tres</span>
+
+<span class="cm"># f-strings (formato moderno, recomendado)</span>
+<span class="va">nombre</span> <span class="op">=</span> <span class="st">"Carlos"</span>
+<span class="va">edad</span>   <span class="op">=</span> <span class="nb">28</span>
+<span class="va">pi</span>     <span class="op">=</span> <span class="nb">3.14159</span>
+<span class="fn">print</span>(<span class="st">f"</span><span class="va">{nombre}</span><span class="st"> tiene </span><span class="va">{edad}</span><span class="st"> años"</span>)
+<span class="fn">print</span>(<span class="st">f"Pi ≈ </span><span class="va">{pi:.2f}</span><span class="st">"</span>)        <span class="cm"># 2 decimales → 3.14</span>
+<span class="fn">print</span>(<span class="st">f"</span><span class="va">{nombre.upper()}</span><span class="st">"</span>)    <span class="cm"># expresiones dentro</span>
+
+<span class="cm"># Indexación y slicing</span>
+<span class="va">s</span> <span class="op">=</span> <span class="st">"Python"</span>
+<span class="fn">print</span>(<span class="va">s</span>[<span class="nb">0</span>])      <span class="cm"># P</span>
+<span class="fn">print</span>(<span class="va">s</span>[<span class="op">-</span><span class="nb">1</span>])     <span class="cm"># n</span>
+<span class="fn">print</span>(<span class="va">s</span>[<span class="nb">0</span>:<span class="nb">3</span>])    <span class="cm"># Pyt</span>
+<span class="fn">print</span>(<span class="va">s</span>[::<span class="op">-</span><span class="nb">1</span>])   <span class="cm"># nohtyP  (invertida)</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">HOLA, MUNDO PYTHON<br>  Hola, Universo Python  <br>True<br>['uno', 'dos', 'tres'] → uno - dos - tres<br>Carlos tiene 28 años<br>Pi ≈ 3.14<br>CARLOS</div>
+    </div>
+  </section>
+
+  <!-- ===== 07 OOP ===== -->
+  <section class="section" id="oop">
+    <div class="section-label">
+      <span class="section-num">07 // PROGRAMACIÓN ORIENTADA A OBJETOS</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">🏗️</span> Clases y Objetos (POO)</h2>
+    <p>La Programación Orientada a Objetos organiza el código en <strong>clases</strong> que modelan entidades del mundo real, con sus atributos (datos) y métodos (comportamientos).</p>
+
+    <!-- OOP Concepts Illustration -->
+    <div class="illustration">
+      <svg viewBox="0 0 580 180" xmlns="http://www.w3.org/2000/svg" width="580" height="180">
+        <!-- Class box -->
+        <rect x="20" y="20" width="200" height="140" rx="10" fill="rgba(255,212,59,0.06)" stroke="#ffd43b" stroke-width="1.5" stroke-opacity="0.6"/>
+        <rect x="20" y="20" width="200" height="36" rx="10" fill="rgba(255,212,59,0.15)"/>
+        <rect x="20" y="46" width="200" height="10" fill="rgba(255,212,59,0.15)"/>
+        <text x="120" y="43" text-anchor="middle" font-family="Fira Code" font-size="14" fill="#ffd43b" font-weight="600">Clase: Perro</text>
+
+        <text x="35" y="75" font-family="Space Mono" font-size="9" fill="#7a8099" opacity="0.7">ATRIBUTOS</text>
+        <text x="35" y="95" font-family="Fira Code" font-size="11" fill="#c5cad8">• nombre: str</text>
+        <text x="35" y="112" font-family="Fira Code" font-size="11" fill="#c5cad8">• raza: str</text>
+        <text x="35" y="129" font-family="Fira Code" font-size="11" fill="#c5cad8">• edad: int</text>
+
+        <line x1="35" y1="137" x2="205" y2="137" stroke="#ffd43b" stroke-width="0.6" opacity="0.3"/>
+        <text x="35" y="152" font-family="Space Mono" font-size="9" fill="#7a8099" opacity="0.7">MÉTODOS</text>
+
+        <!-- Instances -->
+        <!-- obj1 -->
+        <rect x="270" y="20" width="130" height="70" rx="8" fill="rgba(79,195,247,0.08)" stroke="#4fc3f7" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="335" y="42" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#4fc3f7" opacity="0.7">OBJETO 1</text>
+        <text x="283" y="60" font-family="Fira Code" font-size="11" fill="#c5cad8">nombre = "Rex"</text>
+        <text x="283" y="76" font-family="Fira Code" font-size="11" fill="#c5cad8">edad = 3</text>
+
+        <!-- obj2 -->
+        <rect x="270" y="105" width="130" height="55" rx="8" fill="rgba(129,199,132,0.08)" stroke="#81c784" stroke-width="1.2" stroke-opacity="0.5"/>
+        <text x="335" y="125" text-anchor="middle" font-family="Space Mono" font-size="9" fill="#81c784" opacity="0.7">OBJETO 2</text>
+        <text x="283" y="143" font-family="Fira Code" font-size="11" fill="#c5cad8">nombre = "Luna"</text>
+        <text x="283" y="159" font-family="Fira Code" font-size="11" fill="#c5cad8">edad = 5</text>
+
+        <!-- arrows -->
+        <line x1="220" y1="55" x2="268" y2="55" stroke="#ffd43b" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.5"/>
+        <polygon points="266,50 274,55 266,60" fill="#ffd43b" opacity="0.5"/>
+        <line x1="220" y1="100" x2="268" y2="132" stroke="#ffd43b" stroke-width="1.2" stroke-dasharray="4,3" opacity="0.5"/>
+        <polygon points="264,128 272,133 265,138" fill="#ffd43b" opacity="0.5"/>
+
+        <!-- Labels -->
+        <text x="430" y="60" font-family="Space Mono" font-size="9" fill="#7a8099">instancia</text>
+        <text x="430" y="145" font-family="Space Mono" font-size="9" fill="#7a8099">instancia</text>
+
+        <!-- Pillars -->
+        <text x="430" y="30" font-family="Syne" font-size="11" fill="#bd93f9" font-weight="700">4 Pilares</text>
+        <text x="430" y="50" font-family="Space Mono" font-size="9" fill="#7a8099">• Encapsulación</text>
+        <text x="430" y="68" font-family="Space Mono" font-size="9" fill="#7a8099">• Herencia</text>
+        <text x="430" y="86" font-family="Space Mono" font-size="9" fill="#7a8099">• Polimorfismo</text>
+        <text x="430" y="104" font-family="Space Mono" font-size="9" fill="#7a8099">• Abstracción</text>
+      </svg>
+      <div class="illus-caption">Clase como plantilla → múltiples objetos (instancias)</div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">clases.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="kw">class</span> <span class="cl">Perro</span>:
+    <span class="cm">"""Clase que representa a un perro."""</span>
+
+    <span class="cm"># Variable de clase (compartida por todas las instancias)</span>
+    <span class="va">especie</span> <span class="op">=</span> <span class="st">"Canis familiaris"</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">nombre</span>, <span class="va">raza</span>, <span class="va">edad</span>):
+        <span class="cm"># Atributos de instancia</span>
+        <span class="va">self</span>.<span class="va">nombre</span> <span class="op">=</span> <span class="va">nombre</span>
+        <span class="va">self</span>.<span class="va">raza</span>   <span class="op">=</span> <span class="va">raza</span>
+        <span class="va">self</span>.<span class="va">edad</span>   <span class="op">=</span> <span class="va">edad</span>
+
+    <span class="kw">def</span> <span class="fn">ladrar</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.nombre}</span><span class="st"> dice: ¡Guau!"</span>
+
+    <span class="kw">def</span> <span class="fn">descripcion</span>(<span class="va">self</span>):
+        <span class="kw">return</span> <span class="st">f"</span><span class="va">{self.nombre}</span><span class="st"> es un </span><span class="va">{self.raza}</span><span class="st"> de </span><span class="va">{self.edad}</span><span class="st"> años"</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="va">self</span>):   <span class="cm"># representación en texto</span>
+        <span class="kw">return</span> <span class="st">f"Perro({self.nombre})"</span>
+
+
+<span class="cm"># Crear instancias</span>
+<span class="va">rex</span>  <span class="op">=</span> <span class="cl">Perro</span>(<span class="st">"Rex"</span>,  <span class="st">"Labrador"</span>, <span class="nb">3</span>)
+<span class="va">luna</span> <span class="op">=</span> <span class="cl">Perro</span>(<span class="st">"Luna"</span>, <span class="st">"Poodle"</span>,   <span class="nb">5</span>)
+
+<span class="fn">print</span>(<span class="va">rex</span>.<span class="fn">ladrar</span>())
+<span class="fn">print</span>(<span class="va">luna</span>.<span class="fn">descripcion</span>())
+<span class="fn">print</span>(<span class="cl">Perro</span>.<span class="va">especie</span>)
+
+
+<span class="cm"># ── HERENCIA ─────────────────────────</span>
+<span class="kw">class</span> <span class="cl">PerroGuia</span>(<span class="cl">Perro</span>):       <span class="cm"># hereda de Perro</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="va">self</span>, <span class="va">nombre</span>, <span class="va">dueno</span>):
+        <span class="bi">super</span>().<span class="fn">__init__</span>(<span class="va">nombre</span>, <span class="st">"Golden"</span>, <span class="nb">2</span>)
+        <span class="va">self</span>.<span class="va">dueno</span> <span class="op">=</span> <span class="va">dueno</span>
+
+    <span class="kw">def</span> <span class="fn">guiar</span>(<span class="va">self</span>):             <span class="cm"># método nuevo</span>
+        <span class="kw">return</span> <span class="st">f"{self.nombre} guía a {self.dueno}"</span>
+
+<span class="va">guia</span> <span class="op">=</span> <span class="cl">PerroGuia</span>(<span class="st">"Buddy"</span>, <span class="st">"Pedro"</span>)
+<span class="fn">print</span>(<span class="va">guia</span>.<span class="fn">guiar</span>())
+<span class="fn">print</span>(<span class="va">guia</span>.<span class="fn">ladrar</span>())  <span class="cm"># hereda el método</span></code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">Rex dice: ¡Guau!<br>Luna es un Poodle de 5 años<br>Canis familiaris<br>Buddy guía a Pedro<br>Buddy dice: ¡Guau!</div>
+    </div>
+  </section>
+
+  <!-- ===== 08 MÓDULOS ===== -->
+  <section class="section" id="modulos">
+    <div class="section-label">
+      <span class="section-num">08 // MÓDULOS Y LIBRERÍAS</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">📦</span> Módulos y Librerías</h2>
+    <p>Python viene con una enorme <strong>biblioteca estándar</strong> y miles de paquetes externos que puedes instalar con <code>pip</code>.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🔢</div>
+        <div class="card-title">math / statistics</div>
+        <div class="card-desc">Operaciones matemáticas avanzadas, estadísticas y constantes como π y e.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🗓️</div>
+        <div class="card-title">datetime</div>
+        <div class="card-desc">Manejo de fechas, horas, intervalos de tiempo y zonas horarias.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <div class="card-title">os / pathlib</div>
+        <div class="card-desc">Interacción con el sistema de archivos, variables de entorno y rutas.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌐</div>
+        <div class="card-title">requests</div>
+        <div class="card-desc">Peticiones HTTP sencillas. Imprescindible para consumir APIs web.</div>
+      </div>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">modulos.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Importar módulo completo</span>
+<span class="kw">import</span> <span class="va">math</span>
+<span class="fn">print</span>(<span class="va">math</span>.<span class="va">pi</span>)              <span class="cm"># 3.141592653589793</span>
+<span class="fn">print</span>(<span class="va">math</span>.<span class="fn">sqrt</span>(<span class="nb">144</span>))      <span class="cm"># 12.0</span>
+<span class="fn">print</span>(<span class="va">math</span>.<span class="fn">factorial</span>(<span class="nb">5</span>))   <span class="cm"># 120</span>
+
+<span class="cm"># Importar solo lo necesario</span>
+<span class="kw">from</span> <span class="va">datetime</span> <span class="kw">import</span> <span class="cl">datetime</span>, <span class="cl">timedelta</span>
+<span class="va">ahora</span>   <span class="op">=</span> <span class="cl">datetime</span>.<span class="fn">now</span>()
+<span class="va">manana</span>  <span class="op">=</span> <span class="va">ahora</span> <span class="op">+</span> <span class="cl">timedelta</span>(<span class="va">days</span><span class="op">=</span><span class="nb">1</span>)
+<span class="fn">print</span>(<span class="va">ahora</span>.<span class="fn">strftime</span>(<span class="st">"%d/%m/%Y %H:%M"</span>))
+
+<span class="cm"># Importar con alias</span>
+<span class="kw">import</span> <span class="va">random</span> <span class="kw">as</span> <span class="va">rnd</span>
+<span class="fn">print</span>(<span class="va">rnd</span>.<span class="fn">randint</span>(<span class="nb">1</span>, <span class="nb">100</span>))  <span class="cm"># número aleatorio 1-100</span>
+<span class="fn">print</span>(<span class="va">rnd</span>.<span class="fn">choice</span>([<span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span>]))  <span class="cm"># elemento aleatorio</span>
+
+<span class="cm"># Sistema de archivos</span>
+<span class="kw">import</span> <span class="va">os</span>
+<span class="fn">print</span>(<span class="va">os</span>.<span class="fn">getcwd</span>())         <span class="cm"># directorio actual</span>
+<span class="fn">print</span>(<span class="va">os</span>.<span class="fn">listdir</span>(<span class="st">"."</span>))    <span class="cm"># archivos en el dir</span>
+
+<span class="cm"># Instalar paquetes externos con pip:</span>
+<span class="cm"># pip install requests numpy pandas matplotlib</span></code></pre>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>📦 pip:</strong> El gestor de paquetes de Python. Instala librerías con <code>pip install nombre</code>. Usa entornos virtuales (<code>python -m venv env</code>) para mantener proyectos aislados.
+    </div>
+  </section>
+
+  <!-- ===== 09 ERRORES ===== -->
+  <section class="section" id="errores">
+    <div class="section-label">
+      <span class="section-num">09 // MANEJO DE ERRORES</span>
+      <div class="section-line"></div>
+    </div>
+    <h2><span class="icon">🛡️</span> Manejo de Errores y Excepciones</h2>
+    <p>Los errores en Python se llaman <strong>excepciones</strong>. Con <code>try / except</code> puedes capturarlas y manejarlas sin que el programa se detenga bruscamente.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Excepción</th><th>Cuándo ocurre</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">TypeError</td><td>Operación con tipos incompatibles (ej: "2" + 2)</td></tr>
+          <tr><td class="hl">ValueError</td><td>Valor incorrecto para una función (ej: int("abc"))</td></tr>
+          <tr><td class="hl">IndexError</td><td>Índice fuera de rango en una lista</td></tr>
+          <tr><td class="hl">KeyError</td><td>Clave inexistente en un diccionario</td></tr>
+          <tr><td class="hl">ZeroDivisionError</td><td>División entre cero</td></tr>
+          <tr><td class="hl">FileNotFoundError</td><td>Archivo no encontrado</td></tr>
+          <tr><td class="hl">AttributeError</td><td>Atributo o método inexistente en un objeto</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="code-wrap">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot dot-r"></div><div class="code-dot dot-y"></div><div class="code-dot dot-g"></div></div>
+        <span class="code-filename">excepciones.py</span>
+        <span class="code-lang">Python</span>
+      </div>
+      <pre><code><span class="cm"># Estructura básica try / except</span>
+<span class="kw">try</span>:
+    <span class="va">resultado</span> <span class="op">=</span> <span class="nb">10</span> <span class="op">/</span> <span class="nb">0</span>
+<span class="kw">except</span> <span class="cl">ZeroDivisionError</span>:
+    <span class="fn">print</span>(<span class="st">"Error: no se puede dividir entre cero"</span>)
+
+<span class="cm"># Múltiples excepciones</span>
+<span class="kw">def</span> <span class="fn">convertir</span>(<span class="va">valor</span>):
+    <span class="kw">try</span>:
+        <span class="kw">return</span> <span class="bi">int</span>(<span class="va">valor</span>)
+    <span class="kw">except</span> <span class="cl">ValueError</span>:
+        <span class="fn">print</span>(<span class="st">f"'{valor}' no es un número válido"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+    <span class="kw">except</span> <span class="cl">TypeError</span>:
+        <span class="fn">print</span>(<span class="st">"Tipo de dato incorrecto"</span>)
+        <span class="kw">return</span> <span class="kw">None</span>
+
+<span class="fn">print</span>(<span class="fn">convertir</span>(<span class="st">"42"</span>))    <span class="cm"># 42</span>
+<span class="fn">print</span>(<span class="fn">convertir</span>(<span class="st">"abc"</span>))   <span class="cm"># Error + None</span>
+
+<span class="cm"># try / except / else / finally</span>
+<span class="kw">try</span>:
+    <span class="va">archivo</span> <span class="op">=</span> <span class="fn">open</span>(<span class="st">"datos.txt"</span>, <span class="st">"r"</span>)
+    <span class="va">contenido</span> <span class="op">=</span> <span class="va">archivo</span>.<span class="fn">read</span>()
+<span class="kw">except</span> <span class="cl">FileNotFoundError</span>:
+    <span class="fn">print</span>(<span class="st">"Archivo no encontrado"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Archivo leído exitosamente"</span>)   <span class="cm"># si no hubo error</span>
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="st">"Esto siempre se ejecuta"</span>)      <span class="cm"># siempre</span>
+
+<span class="cm"># Lanzar excepciones personalizadas</span>
+<span class="kw">def</span> <span class="fn">validar_edad</span>(<span class="va">edad</span>):
+    <span class="kw">if</span> <span class="va">edad</span> <span class="op">&lt;</span> <span class="nb">0</span>:
+        <span class="kw">raise</span> <span class="cl">ValueError</span>(<span class="st">f"Edad inválida: {edad}"</span>)
+    <span class="kw">return</span> <span class="va">edad</span>
+
+<span class="kw">try</span>:
+    <span class="fn">validar_edad</span>(<span class="op">-</span><span class="nb">5</span>)
+<span class="kw">except</span> <span class="cl">ValueError</span> <span class="kw">as</span> <span class="va">e</span>:
+    <span class="fn">print</span>(<span class="st">f"Capturado: </span><span class="va">{e}</span><span class="st">"</span>)</code></pre>
+    </div>
+    <div class="output-wrap">
+      <div class="output-header">▶ salida</div>
+      <div class="output-body">Error: no se puede dividir entre cero<br>42<br>'abc' no es un número válido<br>Archivo no encontrado<br>Esto siempre se ejecuta<br>Capturado: Edad inválida: -5</div>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>✅ Buena práctica:</strong> Siempre captura excepciones específicas en lugar de un <code>except</code> genérico. Esto hace tu código más predecible y fácil de depurar.
+    </div>
+
+    <!-- Final summary cards -->
+    <div style="margin-top: 4rem;">
+      <h3>¿Qué sigue?</h3>
+      <p>Has cubierto los fundamentos de Python. Ahora puedes explorar:</p>
+      <div class="chips" style="margin-top: 1.2rem;">
+        <span class="chip">NumPy · Pandas</span>
+        <span class="chip">Django · Flask</span>
+        <span class="chip">Machine Learning</span>
+        <span class="chip">Automatización</span>
+        <span class="chip">APIs REST</span>
+        <span class="chip">Web Scraping</span>
+        <span class="chip">Testing · pytest</span>
+        <span class="chip">Async / await</span>
+        <span class="chip">Decoradores</span>
+        <span class="chip">Generadores</span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Guía de <span>Python</span> · Fundamentos del Lenguaje · Todos los derechos reservados
+</footer>
+
+<script>
+  // Animate sections on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationPlayState = 'running';
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.section').forEach(s => {
+    s.style.animationPlayState = 'paused';
+    observer.observe(s);
+  });
+
+  // Active nav highlight
+  const tocLinks = document.querySelectorAll('.toc a');
+  const sections = document.querySelectorAll('.section');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    tocLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current
+        ? 'var(--py-yellow)' : '';
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>figuras geometricas con HTML</title>
+
+	<style>
+		body
+		{
+			background: #215796;
+			color: white;
+			text-align: center;
+		}
+
+		div
+		{
+			background: #4E9EFC;
+			margin:0 0 10px 10px;
+			display: inline-block;
+		}
+		.cuadrado
+		{
+		    width: 200px;
+			height: 200px;	
+		}
+
+		.circulo
+		{
+		    width: 200px;
+			height: 200px;
+			border-radius: 50%;
+		}
+
+		.rectangulo
+		{
+			width: 400px;
+			height: 200px;
+		}
+
+		.descripcion
+		{
+			background: #81DB9A;
+			width: 80%;
+			
+			border-radius: 20px;
+			border:4px white solid ;
+			color:black;
+		}
+
+		.btn-volver
+		{
+			position: fixed;
+			top: 16px;
+			left: 16px;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			background: #4E9EFC;
+			color: white;
+			text-decoration: none;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 10px 18px;
+			border-radius: 8px;
+			border: 2px solid white;
+			cursor: pointer;
+			transition: background 0.2s, transform 0.1s;
+			z-index: 1000;
+		}
+
+		.btn-volver:hover
+		{
+			background: #1a6fc4;
+			transform: translateX(-2px);
+		}
+
+		.btn-volver::before
+		{
+			content: "←";
+			font-size: 16px;
+		}
+	</style>
+
+</head>
+<body>
+
+	<a href="index.html" class="btn-volver">Volver al portafolio</a>
+
+	<h1>Creando figura con html y css</h1>
+	
+	<div class="cuadrado">
+		
+	</div>
+	
+	<div class="circulo">
+		
+	</div>
+	
+	<div class="rectangulo">
+		
+	</div>
+
+
+	<div class="descripcion">
+	 	<p>Acerca de mi</p>
+	 	<p>Yo soy javier zair me gusta mucho las computadoras principalmente por los juegos de shooters como warzone
+	 	y todo lo que tenga que ver que sea parecido a la saga call of duty, me gustan las cosas de terror, me gustan
+	    ver los partidos de futbol de la champions y la liga, me gustan los animales,y tambien me gusta todo lo que
+	    tenga que ver con armar pc saber sobre los componentes de una pc.</p>
+
+	</div>
+
+	<img src="imagenes/ARDUINOS.jpg" width="400px" height="400px">
+
+
+	<p>Creado por:Javier zair</p>
+</body>
+</html>
