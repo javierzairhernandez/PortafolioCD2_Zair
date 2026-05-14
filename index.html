@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portafolio · Cultura Digital 2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0f0d;
+      --surface: #111714;
+      --card: #151c18;
+      --border: #1f2d26;
+      --accent: #3dffa0;
+      --accent2: #00c46a;
+      --dim: #4a6155;
+      --text: #d8ede4;
+      --muted: #6b8f7e;
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-display);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── COVER ── */
+    .cover {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2rem;
+    }
+
+    /* Grid background */
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(61,255,160,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61,255,160,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: gridDrift 20s linear infinite;
+    }
+
+    @keyframes gridDrift {
+      from { transform: translate(0,0); }
+      to   { transform: translate(48px,48px); }
+    }
+
+    /* Glow orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+    .orb-1 { width: 500px; height: 500px; background: var(--accent); top: -100px; left: -120px; animation: pulse 8s ease-in-out infinite alternate; }
+    .orb-2 { width: 350px; height: 350px; background: #00a3ff; bottom: -60px; right: -80px; animation: pulse 11s ease-in-out infinite alternate-reverse; }
+    .orb-3 { width: 220px; height: 220px; background: var(--accent2); top: 55%; left: 60%; animation: pulse 6s ease-in-out infinite alternate; }
+
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.18; }
+      to   { transform: scale(1.15); opacity: 0.26; }
+    }
+
+    /* Floating data nodes */
+    .nodes {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .node {
+      position: absolute;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0;
+      animation: nodeFloat var(--d, 6s) ease-in-out var(--delay, 0s) infinite alternate;
+    }
+    @keyframes nodeFloat {
+      0%   { opacity: 0; transform: translateY(0) scale(0.8); }
+      50%  { opacity: 0.6; }
+      100% { opacity: 0.1; transform: translateY(-30px) scale(1.2); }
+    }
+
+    /* Scan line */
+    .scanline {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.15;
+      animation: scan 6s linear infinite;
+    }
+    @keyframes scan {
+      from { top: 0%; }
+      to   { top: 100%; }
+    }
+
+    /* Cover content */
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      animation: fadeUp 1.2s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      background: rgba(61,255,160,0.04);
+      animation: fadeUp 1.2s 0.2s cubic-bezier(.22,1,.36,1) both;
+    }
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: blink 1.4s steps(1) infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .cover-title {
+      font-size: clamp(3rem, 9vw, 7rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .cover-title span {
+      display: block;
+      background: linear-gradient(135deg, var(--accent) 0%, #00e5ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .cover-title em {
+      display: block;
+      font-style: normal;
+      color: var(--text);
+    }
+
+    .cover-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+      animation: fadeUp 1.2s 0.4s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .cover-semester {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--dim);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      animation: fadeUp 1.2s 0.5s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .cover-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      margin: 2rem auto;
+      animation: fadeUp 1.2s 0.6s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    /* ── SOCIAL BUTTONS ── */
+    .social-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1.6rem;
+      animation: fadeUp 1.2s 0.7s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .social-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .social-btn--ig {
+      background: linear-gradient(135deg, rgba(131,58,180,0.18), rgba(253,29,29,0.12), rgba(252,176,69,0.12));
+      border-color: rgba(253,29,29,0.4);
+      color: #ff8ca0;
+      box-shadow: 0 0 12px rgba(253,29,29,0.12);
+    }
+    .social-btn--ig:hover {
+      background: linear-gradient(135deg, rgba(131,58,180,0.35), rgba(253,29,29,0.25), rgba(252,176,69,0.2));
+      box-shadow: 0 0 22px rgba(253,29,29,0.3), 0 4px 16px rgba(131,58,180,0.2);
+      border-color: rgba(253,29,29,0.7);
+    }
+
+    .social-btn--fb {
+      background: rgba(24,119,242,0.12);
+      border-color: rgba(24,119,242,0.4);
+      color: #6aacff;
+      box-shadow: 0 0 12px rgba(24,119,242,0.12);
+    }
+    .social-btn--fb:hover {
+      background: rgba(24,119,242,0.25);
+      box-shadow: 0 0 22px rgba(24,119,242,0.35), 0 4px 16px rgba(24,119,242,0.15);
+      border-color: rgba(24,119,242,0.7);
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--dim);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      z-index: 2;
+      animation: fadeUp 1.4s 1s cubic-bezier(.22,1,.36,1) both;
+    }
+    .scroll-arrow {
+      width: 20px; height: 20px;
+      border-right: 1.5px solid var(--dim);
+      border-bottom: 1.5px solid var(--dim);
+      transform: rotate(45deg);
+      animation: scrollBounce 1.8s ease-in-out infinite;
+    }
+    @keyframes scrollBounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50%       { transform: rotate(45deg) translateY(5px); }
+    }
+
+    /* ── TASKS SECTION ── */
+    .tasks-section {
+      padding: 6rem 2rem 8rem;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      margin-bottom: 3.5rem;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.1;
+    }
+
+    .task-count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    /* ── GRID ── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      box-shadow: 0 0 0 0 rgba(61,255,160,0);
+      transition: box-shadow 0.3s ease;
+      pointer-events: none;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(61,255,160,0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(61,255,160,0.15);
+    }
+
+    /* Image area */
+    .card-img {
+      position: relative;
+      width: 100%;
+      height: 190px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+    .card-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+      filter: brightness(0.85) saturate(0.9);
+    }
+    .card:hover .card-img img { transform: scale(1.06); filter: brightness(0.95) saturate(1); }
+
+    /* Placeholder for cards without image */
+    .card-img-placeholder {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #111714, #0d1a12);
+    }
+    .placeholder-icon {
+      opacity: 0.12;
+    }
+    .placeholder-icon svg { width: 64px; height: 64px; }
+
+    .card-num {
+      position: absolute;
+      top: 12px; left: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      background: rgba(10,15,13,0.85);
+      border: 1px solid rgba(61,255,160,0.2);
+      border-radius: 4px;
+      padding: 3px 8px;
+      letter-spacing: 0.08em;
+      backdrop-filter: blur(4px);
+    }
+
+    .card-tag {
+      position: absolute;
+      top: 12px; right: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--muted);
+      background: rgba(10,15,13,0.85);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 3px 8px;
+      letter-spacing: 0.06em;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 1.25rem 1.25rem 1rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-desc {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    /* Card footer */
+    .card-footer {
+      padding: 0 1.25rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .card-date {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+    }
+
+    .btn-ver {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      background: transparent;
+      border: 1px solid var(--accent2);
+      border-radius: 6px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+      white-space: nowrap;
+    }
+    .btn-ver:hover {
+      background: rgba(61,255,160,0.08);
+      box-shadow: 0 0 18px rgba(61,255,160,0.15);
+      transform: translateX(2px);
+    }
+    .btn-ver svg { transition: transform 0.2s ease; }
+    .btn-ver:hover svg { transform: translateX(3px); }
+
+    /* Horizontal divider inside cards */
+    .card-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 1.25rem;
+    }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .cards-grid { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════ PORTADA ══════════ -->
+<section class="cover">
+  <!-- Background effects -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="scanline"></div>
+
+  <!-- Floating data nodes -->
+  <div class="nodes">
+    <div class="node" style="left:10%;top:20%;--d:7s;--delay:0s;"></div>
+    <div class="node" style="left:85%;top:15%;--d:9s;--delay:1s;"></div>
+    <div class="node" style="left:25%;top:75%;--d:6s;--delay:2s;"></div>
+    <div class="node" style="left:70%;top:65%;--d:8s;--delay:0.5s;"></div>
+    <div class="node" style="left:50%;top:40%;--d:10s;--delay:3s;"></div>
+    <div class="node" style="left:40%;top:85%;--d:7s;--delay:1.5s;"></div>
+    <div class="node" style="left:90%;top:50%;--d:5s;--delay:2.5s;"></div>
+    <div class="node" style="left:5%;top:55%;--d:11s;--delay:0.8s;"></div>
+  </div>
+
+  <!-- Cover content -->
+  <div class="cover-content">
+    <div class="badge">Portafolio activo · 2026</div>
+
+    <h1 class="cover-title">
+      <em>Portafolio de</em>
+      <span>Cultura Digital 2</span>
+    </h1>
+
+    <div class="cover-divider"></div>
+
+    <p class="cover-sub">Inteligencia Artificial</p>
+    <p class="cover-semester">2° Semestre de IA</p>
+    <p class="cover-sub">By Javier Zair Hernandez Simbron</p>
+    <p class="cover-sub">Centro de Bachillerato Tecnológico Industrial y de Servicios No. 144</p>
+    <div class="social-buttons">
+      <a target="_blank" href="https://www.instagram.com/" class="social-btn social-btn--ig">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+        </svg>
+        Instagram
+      </a>
+      <a target="_blank" href="https://www.facebook.com/" class="social-btn social-btn--fb">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Facebook
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Ver tareas</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+
+<!-- ══════════ TAREAS ══════════ -->
+<section class="tasks-section">
+  <div class="section-header">
+    <div>
+      <p class="section-label">// Actividades del semestre</p>
+      <h2 class="section-title">Mis Tareas</h2>
+    </div>
+    <span class="task-count">06 entradas</span>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- ── CARD 1 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/tim.jpg"iwidth="" height="">
+
+        <!-- Reemplaza src con tu imagen -->
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="48" height="48" rx="4" stroke="#3dffa0" stroke-width="2"/>
+              <circle cx="32" cy="28" r="8" stroke="#3dffa0" stroke-width="2"/>
+              <path d="M16 52c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="#3dffa0" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        
+          </div>
+        </div>
+        <span class="card-num">01</span>
+        <span class="card-tag">Tarea · Unidad 1</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">El padre del internet</h3>
+        <p class="card-desc">
+          Tim berner lee es considerado el padre del internet, el creador de la WWW.
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">Mar 2026</span>
+        <a href="tarea1.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ── CARD 2 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/lenguajes.jpg"iwidth="" height="">
+
+        <!-- Reemplaza src con tu imagen -->
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="14" width="48" height="36" rx="4" stroke="#3dffa0" stroke-width="2"/>
+              <path d="M22 32l8 8 12-16" stroke="#3dffa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">02</span>
+        <span class="card-tag">Tarea · Unidad 2</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Lenguajes de diseño y programación.</h3>
+        <p class="card-desc">
+          Existen diferentes lenguajes, cada uno con un enfoque especifico, esxisten lenguajes de diseño y maquetacion y lenguajes de programacion
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">Mar 2026</span>
+        <a href="tarea2.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ── CARD 3 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/html5.jpg"iwidth="" height="">
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="22" stroke="#3dffa0" stroke-width="2"/>
+              <path d="M32 20v12l8 8" stroke="#3dffa0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">03</span>
+        <span class="card-tag">Tarea · Unidad 3</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Guía para aprender html5</h3>
+        <p class="card-desc">
+          Aprende html 5 facil para estructurar sitios web modernos,guía rapida para principiantes
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">May 2026</span>
+        <a href="tarea3.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ── CARD 4 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/css3.jpg"iwidth="" height="">
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="12" y="12" width="16" height="16" rx="2" stroke="#3dffa0" stroke-width="2"/>
+              <rect x="36" y="12" width="16" height="16" rx="2" stroke="#3dffa0" stroke-width="2"/>
+              <rect x="12" y="36" width="16" height="16" rx="2" stroke="#3dffa0" stroke-width="2"/>
+              <rect x="36" y="36" width="16" height="16" rx="2" stroke="#3dffa0" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">04</span>
+        <span class="card-tag">Tarea · Unidad 4</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Guiá para aprender css3</h3>
+        <p class="card-desc">
+          Domina el diseño web y aprende a dominar las propiedades de css3, para personalizar fuentes, fondos y layouts.
+          La guíá esencial para empezar a diseñar ahora mismo
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">May 2026</span>
+        <a href="tarea4.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ── CARD 5 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/htmlycss.jpg"iwidth="" height="">
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 8L8 24v28h48V24L32 8z" stroke="#3dffa0" stroke-width="2" stroke-linejoin="round"/>
+              <rect x="24" y="36" width="16" height="16" stroke="#3dffa0" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">05</span>
+        <span class="card-tag">Tarea · Unidad 5</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Practica con HTML y CSS</h3>
+        <p class="card-desc">
+          En esta practica se hace el uso de la estructura basica de HTML y CSS, para famializarse con la escritura de codigo.
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">may 2026</span>
+        <a href="tarea5.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- ── CARD 6 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/python.jpg"iwidth="" height="">
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 48L32 16l16 32H16z" stroke="#3dffa0" stroke-width="2" stroke-linejoin="round"/>
+              <circle cx="32" cy="38" r="3" fill="#3dffa0"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">06</span>
+        <span class="card-tag">Tarea · Unidad 6</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Conceptos generales de python</h3>
+        <p class="card-desc">
+          aqui veras los conceptos generales de python
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">May 2026</span>
+        <a href="tarea6.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </article>
+
+<!-- ── CARD 7 ── -->
+    <article class="card">
+      <div class="card-img">
+        <img src="imagenes/arduino.jpg"iwidth="" height="">
+        <img src=""iwidth="" height="">
+        <div class="card-img-placeholder">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M32 8L8 24v28h48V24L32 8z" stroke="#3dffa0" stroke-width="2" stroke-linejoin="round"/>
+              <rect x="24" y="36" width="16" height="16" stroke="#3dffa0" stroke-width="2"/>
+            </svg>
+          </div>
+        </div>
+        <span class="card-num">07</span>
+        <span class="card-tag">Tarea · Unidad 7</span>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">Componentes de arduino</h3>
+        <p class="card-desc">
+          aqui veras sensores y demas harware compatibles con arduino
+        </p>
+      </div>
+      <div class="card-divider"></div>
+      <div class="card-footer">
+        <span class="card-date">may 2026</span>
+        <a href="tarea7.html" class="btn-ver">
+          Ver tarea
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+  </div><!-- /cards-grid -->
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="footer">
+  Portafolio de Cultura Digital 2 &nbsp;·&nbsp; 2° Semestre de IA &nbsp;·&nbsp; 2025
+</footer>
+
+</body>
+</html>
